@@ -33,6 +33,7 @@ export const Input: React.FC<InputProps> = ({
         placeholder:text-[#929292]
         focus:outline-none 
         text-[1.8rem]
+        poppins
         ${className}
       `}
         {...props}

@@ -5,6 +5,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --font-poppins: 'Poppins', sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -30,4 +31,8 @@ body {
   /* 1.6 * 10px = 16px */
   font-size: 1.6rem;
   font-family: 'Noto-Sans-KR', sans-serif;
+}
+
+.poppins {
+  font-family: var(--font-poppins);
 }

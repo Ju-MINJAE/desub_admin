@@ -38,6 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
     <button
       disabled={disabled}
       className={`
+      poppins
       ${getSizeStyles()} 
       ${getVariantStyles()}
       ${className}

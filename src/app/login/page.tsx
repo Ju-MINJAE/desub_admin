@@ -26,7 +26,7 @@ const Login = () => {
           height={105}
         />
       </div>
-      <h1 className="pt-[3.689rem] font-semibold text-[4rem]">Admin</h1>
+      <h1 className="pt-[3.689rem] font-semibold text-[4rem] poppins">Admin</h1>
 
       <form
         onSubmit={onSubmit}
