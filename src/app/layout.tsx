@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
+import ConditionalSidebar from './components/ConditionalSidebar';
 import './globals.css';
 
 const poppins = Poppins({
@@ -20,7 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={poppins.variable}>
-      <body>{children}</body>
+      <body>
+        <ConditionalSidebar />
+        <main className="ml-[28.6rem]">{children}</main>
+      </body>
     </html>
   );
 }
