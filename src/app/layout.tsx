@@ -1,5 +1,13 @@
 import type { Metadata } from 'next';
+import { Poppins } from 'next/font/google';
+import ConditionalSidebar from './components/ConditionalSidebar';
 import './globals.css';
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: '400',
+  variable: '--font-poppins',
+});
 
 export const metadata: Metadata = {
   title: 'desub admin',
@@ -12,8 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={poppins.variable}>
+      <body>
+        <ConditionalSidebar />
+        <main className="ml-[28.6rem]">{children}</main>
+      </body>
     </html>
   );
 }
