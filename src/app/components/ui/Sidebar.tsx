@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 const Sidebar = () => {
   const pathname = usePathname();
@@ -23,7 +23,7 @@ const Sidebar = () => {
         <Link
           href="/dashboard"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/dashboard' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/dashboard" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           대시보드
@@ -31,7 +31,7 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/task-request' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/task-request" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           작업요청관리
@@ -39,7 +39,7 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/consultation' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/consultation" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           상담예약관리
@@ -47,7 +47,7 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/online-meeting' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/online-meeting" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           온라인미팅관리
@@ -55,15 +55,15 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/subscription-product' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/subscription-product" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           구독상품관리
         </Link>
         <Link
-          href="/"
+          href="/subscription-status"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/subscription-status' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/subscription-status" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           구독현황관리
@@ -71,7 +71,7 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/subscription-cancel' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/subscription-cancel" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           구독취소관리
@@ -79,7 +79,7 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/sales' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/sales" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           매출관리
@@ -87,7 +87,7 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/customer' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/customer" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           고객관리
@@ -95,7 +95,7 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/kickoff-form' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/kickoff-form" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           킥오프 폼양식 관리
@@ -103,7 +103,7 @@ const Sidebar = () => {
         <Link
           href="/"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/review' ? 'bg-[#F3F3F3] font-bold' : ''
+            pathname === "/review" ? "bg-[#F3F3F3] font-bold" : ""
           }`}
         >
           리뷰관리
