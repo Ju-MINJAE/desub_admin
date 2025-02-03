@@ -24,7 +24,7 @@ jobs:
         run: pnpm install
 
       - name: Build project
-        run: pnpm run build && pnpm run export
+        run: pnpm run build
 
       - name: Deploy to GitHub Pages
         uses: actions/upload-pages-artifact@v3
