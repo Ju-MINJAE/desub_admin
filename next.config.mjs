@@ -2,12 +2,12 @@
  * @type {import('next').NextConfig}
  */
 const nextConfig = {
-  output: "export",
+  output: 'export',
   images: {
     unoptimized: true,
   },
-  assetPrefix: process.env.NODE_ENV === "production" ? "/desub_admin" : "",
-  basePath: process.env.NODE_ENV === "production" ? "/desub_admin" : "",
+  assetPrefix: process.env.NODE_ENV === 'production' ? '/desub_admin' : '',
+  basePath: process.env.NODE_ENV === 'production' ? '/desub_admin' : '',
 };
 
 export default nextConfig;

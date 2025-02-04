@@ -20,7 +20,7 @@ const Login = () => {
     <div className="min-h-screen flex flex-col justify-center items-center">
       <div className="pt-[13.6rem]">
         <Image
-          src="/images/desub_logo.png"
+          src="images/desub_logo.png"
           alt="desub_logo"
           width={460}
           height={105}

@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" className={poppins.variable}>
       <body>
         <ConditionalSidebar />
-        <main className="ml-[28.6rem]">{children}</main>
+        <main>{children}</main>
       </body>
     </html>
   );
