@@ -22,3 +22,10 @@ export type SortField =
   | "endDate"
   | "expiryDate";
 export type SortOrder = "asc" | "desc";
+
+export type SearchOption = {
+  value: keyof Subscriber;
+  label: string;
+  inputType: "text" | "date" | "select";
+  options?: { value: string; label: string }[];
+};

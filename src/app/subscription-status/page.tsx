@@ -1,9 +1,10 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { Subscriber } from "@/types/subscriber";
 import SubscriberCount from "../components/subscription-status/SubscriberCount";
 import SubscriptionTable from "../components/subscription-status/SubscriotionTable";
 import ExportExcelButton from "../components/subscription-status/ExportExcelButton";
+import Search from "../components/subscription-status/Search";
 
 export default function SubscriptionManagement() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([
@@ -27,29 +28,58 @@ export default function SubscriptionManagement() {
     },
   ]);
 
-  const [filters, setFilters] = useState({
+  const [statusFilters, setStatusFilters] = useState({
     inProgress: false,
     paused: false,
   });
 
+  const [searchFilter, setSearchFilter] = useState({
+    field: "" as keyof Subscriber,
+    value: "",
+  });
+
   const handleFilterChange = (filterName: "inProgress" | "paused") => {
-    setFilters((prev) => ({
+    setStatusFilters((prev) => ({
       ...prev,
       [filterName]: !prev[filterName],
     }));
   };
 
+  const handleSearch = useCallback((field: keyof Subscriber, value: string) => {
+    setSearchFilter({ field, value });
+  }, []);
+
   const filteredSubscribers = useMemo(() => {
-    if (!filters.inProgress && !filters.paused) {
-      return subscribers;
+    // 상태 필터링
+    let filtered = subscribers;
+
+    if (statusFilters.inProgress || statusFilters.paused) {
+      filtered = filtered.filter((subscriber) => {
+        if (statusFilters.inProgress && subscriber.status === "진행중")
+          return true;
+        if (statusFilters.paused && subscriber.status === "일시정지")
+          return true;
+        return false;
+      });
     }
 
-    return subscribers.filter((subscriber) => {
-      if (filters.inProgress && subscriber.status === "진행중") return true;
-      if (filters.paused && subscriber.status === "일시정지") return true;
-      return false;
-    });
-  }, [subscribers, filters]);
+    // 검색 필터링
+    if (searchFilter.value) {
+      filtered = filtered.filter((subscriber) => {
+        const fieldValue = subscriber[searchFilter.field];
+
+        if (String(searchFilter.field).includes("Date")) {
+          return String(fieldValue).includes(searchFilter.value);
+        }
+
+        return String(fieldValue)
+          .toLowerCase()
+          .includes(searchFilter.value.toLowerCase());
+      });
+    }
+
+    return filtered;
+  }, [subscribers, statusFilters, searchFilter]);
 
   return (
     <div className="p-[3.1rem]">
@@ -59,13 +89,7 @@ export default function SubscriptionManagement() {
 
       <div className="flex justify-between items-center mt-[4.9rem]">
         <ExportExcelButton data={subscribers} fileName="구독자_목록" />
-
-        <div className="space-x-7">
-          <select className="border border-black p-2 w-[17rem]">
-            <option>이름</option>
-          </select>
-          <input type="text" className="border p-2 w-[17rem]" />
-        </div>
+        <Search onSearch={handleSearch} />
       </div>
 
       <div className="flex mt-[2.5rem] text-[1.3rem] gap-4">
@@ -73,7 +97,7 @@ export default function SubscriptionManagement() {
           <input
             type="checkbox"
             className="mr-2"
-            checked={filters.inProgress}
+            checked={statusFilters.inProgress}
             onChange={() => handleFilterChange("inProgress")}
           />
           진행중
@@ -82,7 +106,7 @@ export default function SubscriptionManagement() {
           <input
             type="checkbox"
             className="mr-2"
-            checked={filters.paused}
+            checked={statusFilters.paused}
             onChange={() => handleFilterChange("paused")}
           />
           일시정지
