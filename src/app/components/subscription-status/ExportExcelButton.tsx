@@ -1,31 +1,32 @@
 import * as XLSX from "xlsx";
-import { Subscriber } from "@/types/subscriber";
 
-interface ExportExcelButtonProps {
-  data: Subscriber[];
+interface ExportExcelButtonProps<T> {
+  data: T[];
   fileName?: string;
+  headers: {
+    [K in keyof Required<T>]?: string;
+  };
 }
 
-export default function ExportExcelButton({
+export default function ExportExcelButton<T>({
   data,
-  fileName = "subscribers",
-}: ExportExcelButtonProps) {
+  fileName = "export",
+  headers,
+}: ExportExcelButtonProps<T>) {
   const handleExport = () => {
-    const excelData = data.map((item) => ({
-      이름: item.name,
-      이메일: item.email,
-      전화번호: item.phone,
-      구독현황: item.status,
-      최초결제일: item.startDate,
-      최근결제일: item.endDate,
-      구독만료일: item.expiryDate,
-    }));
+    const excelData = data.map((item) => {
+      const row: Record<string, any> = {};
+      (Object.keys(headers) as Array<keyof T>).forEach((key) => {
+        if (headers[key]) {
+          row[headers[key]!] = item[key];
+        }
+      });
+      return row;
+    });
 
     const wb = XLSX.utils.book_new();
     const ws = XLSX.utils.json_to_sheet(excelData);
-
-    XLSX.utils.book_append_sheet(wb, ws, "구독현황");
-
+    XLSX.utils.book_append_sheet(wb, ws, "Sheet1");
     XLSX.writeFile(wb, `${fileName}.xlsx`);
   };
 

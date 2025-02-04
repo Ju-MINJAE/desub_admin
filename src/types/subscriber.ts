@@ -23,9 +23,9 @@ export type SortField =
   | "expiryDate";
 export type SortOrder = "asc" | "desc";
 
-export type SearchOption = {
-  value: keyof Subscriber;
+export interface SearchOption<T> {
+  value: keyof T;
   label: string;
   inputType: "text" | "date" | "select";
   options?: { value: string; label: string }[];
-};
+}

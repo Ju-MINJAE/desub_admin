@@ -5,8 +5,9 @@ import SubscriberCount from "../components/subscription-status/SubscriberCount";
 import SubscriptionTable from "../components/subscription-status/SubscriotionTable";
 import ExportExcelButton from "../components/subscription-status/ExportExcelButton";
 import Search from "../components/subscription-status/Search";
+import { subscriberSearchOptions } from "../constants/searchOptions";
 
-export default function SubscriptionManagement() {
+export default function SubscriptionStatus() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([
     {
       name: "홍길동",
@@ -50,7 +51,6 @@ export default function SubscriptionManagement() {
   }, []);
 
   const filteredSubscribers = useMemo(() => {
-    // 상태 필터링
     let filtered = subscribers;
 
     if (statusFilters.inProgress || statusFilters.paused) {
@@ -63,7 +63,6 @@ export default function SubscriptionManagement() {
       });
     }
 
-    // 검색 필터링
     if (searchFilter.value) {
       filtered = filtered.filter((subscriber) => {
         const fieldValue = subscriber[searchFilter.field];
@@ -88,8 +87,23 @@ export default function SubscriptionManagement() {
       <SubscriberCount totalCount={0} newCount={0} pausedCount={0} />
 
       <div className="flex justify-between items-center mt-[4.9rem]">
-        <ExportExcelButton data={subscribers} fileName="구독자_목록" />
-        <Search onSearch={handleSearch} />
+        <ExportExcelButton<Subscriber>
+          data={filteredSubscribers}
+          fileName="구독자_목록"
+          headers={{
+            name: "이름",
+            email: "이메일",
+            phone: "전화번호",
+            status: "구독현황",
+            startDate: "최초결제일",
+            endDate: "최근결제일",
+            expiryDate: "구독만료일",
+          }}
+        />
+        <Search<Subscriber>
+          onSearch={handleSearch}
+          searchOptions={subscriberSearchOptions}
+        />
       </div>
 
       <div className="flex mt-[2.5rem] text-[1.3rem] gap-4">

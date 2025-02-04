@@ -69,7 +69,7 @@ const Sidebar = () => {
           구독현황관리
         </Link>
         <Link
-          href="/"
+          href="/subscription-cancel"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
             pathname === "/subscription-cancel" ? "bg-[#F3F3F3] font-bold" : ""
           }`}

@@ -1,36 +1,20 @@
-import { SearchOption, Subscriber } from "@/types/subscriber";
+import { SearchOption } from "@/types/subscriber";
 import { useEffect, useState } from "react";
 
-interface SearchProps {
-  onSearch: (field: keyof Subscriber, value: string) => void;
+interface SearchProps<T> {
+  onSearch: (field: keyof T, value: string) => void;
+  searchOptions: SearchOption<T>[];
 }
 
-const searchOptions: SearchOption[] = [
-  { value: "name", label: "이름", inputType: "text" },
-  { value: "email", label: "이메일", inputType: "text" },
-  { value: "phone", label: "전화번호", inputType: "text" },
-  {
-    value: "status",
-    label: "구독현황",
-    inputType: "select",
-    options: [
-      { value: "진행중", label: "진행중" },
-      { value: "일시정지", label: "일시정지" },
-    ],
-  },
-  { value: "startDate", label: "최초결제일", inputType: "date" },
-  { value: "endDate", label: "최근결제일", inputType: "date" },
-  { value: "expiryDate", label: "구독만료일", inputType: "date" },
-];
-
-export default function Search({ onSearch }: SearchProps) {
-  const [selectedSearchOption, setSelectedSearchOption] =
-    useState<SearchOption>(searchOptions[0]);
+export default function Search<T>({ onSearch, searchOptions }: SearchProps<T>) {
+  const [selectedSearchOption, setSelectedSearchOption] = useState<
+    SearchOption<T>
+  >(searchOptions[0]);
   const [searchValue, setSearchValue] = useState<string>("");
 
   useEffect(() => {
     onSearch(selectedSearchOption.value, searchValue);
-  }, [searchValue, selectedSearchOption.value, onSearch]);
+  }, [searchValue, selectedSearchOption.value]);
 
   const renderSearchInput = () => {
     switch (selectedSearchOption.inputType) {
@@ -75,7 +59,7 @@ export default function Search({ onSearch }: SearchProps) {
     <div className="space-x-7">
       <select
         className="border border-black p-2 w-[17rem]"
-        value={selectedSearchOption.value}
+        value={selectedSearchOption.value as string}
         onChange={(e) => {
           const option = searchOptions.find(
             (opt) => opt.value === e.target.value
@@ -87,7 +71,7 @@ export default function Search({ onSearch }: SearchProps) {
         }}
       >
         {searchOptions.map((option) => (
-          <option key={option.value} value={option.value}>
+          <option key={option.value as string} value={option.value as string}>
             {option.label}
           </option>
         ))}
