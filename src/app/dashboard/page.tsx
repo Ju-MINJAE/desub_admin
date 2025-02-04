@@ -1,5 +1,6 @@
 import Image from 'next/image';
 import { Heading } from '../components/ui/Heading';
+import Link from 'next/link';
 
 const Dashboard = () => {
   return (
@@ -9,12 +10,14 @@ const Dashboard = () => {
           <div className="w-[33.9rem] h-[26.7rem] px-[2.9rem] py-[1.6rem]">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">작업요청현황</Heading>
-              <Image
-                src="icons/plus-circle.svg"
-                alt="plus"
-                width={24}
-                height={24}
-              />
+              <Link href="/task-request">
+                <Image
+                  src="icons/plus-circle.svg"
+                  alt="plus"
+                  width={24}
+                  height={24}
+                />
+              </Link>
             </div>
             <div className="space-y-[2.6rem]">
               <div className="flex justify-between items-center">
@@ -39,12 +42,14 @@ const Dashboard = () => {
           <div className="w-[33.9rem] h-[26.7rem] px-[2.9rem] py-[1.6rem]">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">상담예약현황</Heading>
-              <Image
-                src="icons/plus-circle.svg"
-                alt="plus"
-                width={24}
-                height={24}
-              />
+              <Link href="/consultation">
+                <Image
+                  src="icons/plus-circle.svg"
+                  alt="plus"
+                  width={24}
+                  height={24}
+                />
+              </Link>
             </div>
             <div className="space-y-[2.6rem]">
               <div className="flex justify-between items-center">
@@ -65,12 +70,14 @@ const Dashboard = () => {
           <div className="w-[33.9rem] h-[26.7rem] px-[2.9rem] py-[1.6rem]">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">온라인미팅현황</Heading>
-              <Image
-                src="icons/plus-circle.svg"
-                alt="plus"
-                width={24}
-                height={24}
-              />
+              <Link href="/online-meeting">
+                <Image
+                  src="icons/plus-circle.svg"
+                  alt="plus"
+                  width={24}
+                  height={24}
+                />
+              </Link>
             </div>
             <div className="space-y-[2.6rem]">
               <div className="flex justify-between items-center">
@@ -91,12 +98,14 @@ const Dashboard = () => {
           <div className="w-[33.9rem] h-[26.7rem] px-[2.9rem] py-[1.6rem]">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">구독현황</Heading>
-              <Image
-                src="icons/plus-circle.svg"
-                alt="plus"
-                width={24}
-                height={24}
-              />
+              <Link href="/subscription-status">
+                <Image
+                  src="icons/plus-circle.svg"
+                  alt="plus"
+                  width={24}
+                  height={24}
+                />
+              </Link>
             </div>
             <div className="space-y-[2.6rem]">
               <div className="flex justify-between items-center">
@@ -117,12 +126,14 @@ const Dashboard = () => {
           <div className="w-[33.9rem] h-[26.7rem] px-[2.9rem] py-[1.6rem]">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">구독취소현황</Heading>
-              <Image
-                src="icons/plus-circle.svg"
-                alt="plus"
-                width={24}
-                height={24}
-              />
+              <Link href="/subscription-cancel">
+                <Image
+                  src="icons/plus-circle.svg"
+                  alt="plus"
+                  width={24}
+                  height={24}
+                />
+              </Link>
             </div>
             <div className="space-y-[2.6rem]">
               <div className="flex justify-between items-center">
@@ -139,12 +150,14 @@ const Dashboard = () => {
           <div className="w-[33.9rem] h-[26.7rem] px-[2.9rem] py-[1.6rem]">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">리뷰현황</Heading>
-              <Image
-                src="icons/plus-circle.svg"
-                alt="plus"
-                width={24}
-                height={24}
-              />
+              <Link href="/review">
+                <Image
+                  src="icons/plus-circle.svg"
+                  alt="plus"
+                  width={24}
+                  height={24}
+                />
+              </Link>
             </div>
             <div className="space-y-[2.6rem]">
               <div className="flex justify-between items-center">
@@ -161,12 +174,14 @@ const Dashboard = () => {
           <div className="w-[33.9rem] h-[26.7rem] px-[2.9rem] py-[1.6rem]">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">고객현황</Heading>
-              <Image
-                src="icons/plus-circle.svg"
-                alt="plus"
-                width={24}
-                height={24}
-              />
+              <Link href="/customer">
+                <Image
+                  src="icons/plus-circle.svg"
+                  alt="plus"
+                  width={24}
+                  height={24}
+                />
+              </Link>
             </div>
             <div className="space-y-[2.6rem]">
               <div className="flex justify-between items-center">
@@ -191,12 +206,14 @@ const Dashboard = () => {
           <div className="px-[2.9rem] py-[1.6rem] col-span-full lg:col-span-2">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">매출현황</Heading>
-              <Image
-                src="icons/plus-circle.svg"
-                alt="plus"
-                width={24}
-                height={24}
-              />
+              <Link href="/sales">
+                <Image
+                  src="icons/plus-circle.svg"
+                  alt="plus"
+                  width={24}
+                  height={24}
+                />
+              </Link>
             </div>
             <div className="space-y-[2.6rem]">
               <div className="flex justify-between items-center">
