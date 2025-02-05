@@ -5,9 +5,10 @@ import React, { useState } from 'react';
 
 interface SubscriptionTableProps {
   subscribers: Review[];
+  onReviewSelect: (review: Review) => void;
 }
 
-export default function ReviewTable({ subscribers }: SubscriptionTableProps) {
+export default function ReviewTable({ subscribers, onReviewSelect }: SubscriptionTableProps) {
   const [sortField, setSortField] = useState<ReviewSortField | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
@@ -94,7 +95,7 @@ export default function ReviewTable({ subscribers }: SubscriptionTableProps) {
               </span>
             </div>
           </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('phone')}>
+          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('reviewRating')}>
             <div className="flex items-center justify-center">
               별점
               <span className="inline-flex flex-col ml-2">
@@ -129,7 +130,12 @@ export default function ReviewTable({ subscribers }: SubscriptionTableProps) {
             <td className="p-4 text-center">{subscriber.email}</td>
             <td className="p-4 text-center">{subscriber.phone}</td>
             <td className="p-4 text-center">{subscriber.reviewRating}</td>
-            <td className="p-4 text-center">{subscriber.reviewContent}(아직 구현 안함)</td>
+            <td
+              className="p-4 text-center cursor-pointer underline"
+              onClick={() => onReviewSelect(subscriber)}
+            >
+              상세보기
+            </td>
           </tr>
         ))}
       </tbody>
