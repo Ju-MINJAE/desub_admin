@@ -1,5 +1,6 @@
 import { Cancellation } from '@/types/cancellation';
 import { Review } from '@/types/review';
+import { Sale } from '@/types/sales';
 import { SearchOption, Subscriber } from '@/types/subscriber';
 
 export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
@@ -62,4 +63,21 @@ export const reviewSearchOptions: SearchOption<Review>[] = [
       { value: '5', label: '5점' },
     ],
   },
+];
+
+export const saleSearchOptions: SearchOption<Sale>[] = [
+  { value: 'payDate', label: '결제일', inputType: 'date' },
+  { value: 'price', label: '금액', inputType: 'text' },
+  {
+    value: 'content',
+    label: '내용',
+    inputType: 'select',
+    options: [
+      { value: '결제', label: '결제' },
+      { value: '구독취소', label: '구독취소' },
+    ],
+  },
+  { value: 'name', label: '이름', inputType: 'text' },
+  { value: 'email', label: '이메일', inputType: 'text' },
+  { value: 'phone', label: '전화번호', inputType: 'text' },
 ];
