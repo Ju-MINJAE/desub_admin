@@ -8,7 +8,7 @@ import Search from '../components/subscription-status/Search';
 import { reviewSearchOptions } from '../constants/searchOptions';
 import ReviewModal from '../components/review/ReviewModal';
 
-const Review = () => {
+const ReviewPage = () => {
   const [reviews, _] = useState<Review[]>([
     {
       name: '홍길동',
@@ -106,4 +106,4 @@ const Review = () => {
   );
 };
 
-export default Review;
+export default ReviewPage;
