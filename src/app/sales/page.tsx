@@ -6,6 +6,8 @@ import Search from '../components/subscription-status/Search';
 import { saleSearchOptions } from '../constants/searchOptions';
 import { Sale } from '@/types/sales';
 import SalesTable from '../components/sales/SalesTable';
+import SalesCount from '../components/sales/SalesCount';
+import { Heading } from '../components/ui/Heading';
 
 const Sales = () => {
   const [sales, _] = useState<Sale[]>([
@@ -64,7 +66,10 @@ const Sales = () => {
 
   return (
     <div className="pl-[31.6rem]">
-      <h1 className="text-[3.5rem] mt-[2.1rem] font-bold">매출관리</h1>
+      <Heading tag="h1" className="mt-[2.1rem]">
+        매출관리
+      </Heading>
+      <SalesCount monthTotalSales={80000000} monthCancelSales={-870000} />
 
       <div className="flex justify-between items-center mt-[4.9rem]">
         <ExportExcelButton<Sale>
