@@ -6,6 +6,7 @@ import ReviewTable from '../components/review/ReviewTable';
 import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
 import Search from '../components/subscription-status/Search';
 import { reviewSearchOptions } from '../constants/searchOptions';
+import ReviewModal from '../components/review/ReviewModal';
 
 const Review = () => {
   const [reviews, _] = useState<Review[]>([
@@ -14,14 +15,14 @@ const Review = () => {
       email: 'gildong.hong@gmail.com',
       phone: '010-1234-5678',
       reviewRating: '5',
-      reviewContent: '상세보기',
+      reviewContent: '입력한 리뷰내용',
     },
     {
       name: '김남규',
       email: 'asdasd@gmail.com',
       phone: '010-4444-5679',
       reviewRating: '4',
-      reviewContent: '상세보기',
+      reviewContent: '리뷰내용 ~~~~',
     },
   ]);
 
@@ -30,8 +31,16 @@ const Review = () => {
     value: '',
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
+
   const handleSearch = useCallback((field: keyof Review, value: string) => {
     setSearchFilter({ field, value });
+  }, []);
+
+  const handleReviewSelect = useCallback((review: Review) => {
+    setSelectedReview(review);
+    setIsModalOpen(true);
   }, []);
 
   const filteredSubscribers = useMemo(() => {
@@ -78,8 +87,21 @@ const Review = () => {
       <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
         검색 결과 : {filteredSubscribers.length}
       </p>
+      <ReviewTable subscribers={filteredSubscribers} onReviewSelect={handleReviewSelect} />
 
-      <ReviewTable subscribers={filteredSubscribers} />
+      {selectedReview && (
+        <ReviewModal
+          isOpen={isModalOpen}
+          onClose={() => {
+            setIsModalOpen(false);
+            setSelectedReview(null);
+          }}
+          customerName={selectedReview.name}
+          customerEmail={selectedReview.email}
+          customerRating={selectedReview.reviewRating}
+          customerContent={selectedReview.reviewContent}
+        />
+      )}
     </div>
   );
 };
