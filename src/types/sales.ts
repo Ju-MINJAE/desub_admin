@@ -10,7 +10,6 @@ export interface Sale {
 export interface SalesCountProps {
   monthTotalSales: number;
   monthCancelSales: number;
-  monthSales: number; // monthSales = monthTotalSales - monthCancelSales
 }
 
 export type SaleSortField = 'payDate' | 'price' | 'content' | 'name' | 'email' | 'phone';
