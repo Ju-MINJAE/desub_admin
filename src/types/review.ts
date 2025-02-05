@@ -3,7 +3,7 @@ export interface Review {
   email: string;
   phone: string;
   reviewRating: string;
-  reviewContent: '상세보기';
+  reviewContent: string;
 }
 
 export interface ReviewCountProps {
@@ -11,3 +11,12 @@ export interface ReviewCountProps {
 }
 
 export type ReviewSortField = 'name' | 'email' | 'phone' | 'reviewRating';
+
+export interface ReviewModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  customerName: string;
+  customerEmail: string;
+  customerRating: string;
+  customerContent: string;
+}
