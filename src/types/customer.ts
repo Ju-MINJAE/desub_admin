@@ -36,3 +36,10 @@ export interface Withdrawal {
   withdrawalReason?: string;
   withdrawalStatus: boolean;
 }
+
+export type WithdrawalSortField =
+  | 'withdrawalDate'
+  | 'name'
+  | 'email'
+  | 'phone'
+  | 'withdrawalStatus';
