@@ -25,3 +25,14 @@ export type CustomerSortField =
   | 'startDate'
   | 'endDate'
   | 'expiryDate';
+
+export type TabType = 'customerList' | 'withdrawalList';
+
+export interface Withdrawal {
+  withdrawalDate: string;
+  name: string;
+  email: string;
+  phone: string;
+  withdrawalReason?: string;
+  withdrawalStatus: boolean;
+}
