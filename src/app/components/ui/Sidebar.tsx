@@ -60,14 +60,6 @@ const Sidebar = () => {
           고객관리
         </Link>
         <Link
-          href="/"
-          className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/kickoff-form' ? 'bg-[#F3F3F3] font-bold' : ''
-          }`}
-        >
-          킥오프 폼양식 관리
-        </Link>
-        <Link
           href="/review"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
             pathname === '/review' ? 'bg-[#F3F3F3] font-bold' : ''
