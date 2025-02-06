@@ -10,7 +10,7 @@ const Sidebar = () => {
   return (
     <div className="poppins py-[3.1rem] fixed top-0 left-0 h-screen w-[28.6rem] border-r border-black flex flex-col overflow-y-scroll scrollbar-hide">
       <Image
-        src="images/desub_logo.png"
+        src="/images/desub_logo.png"
         alt="desub_logo"
         width={140}
         height={33}

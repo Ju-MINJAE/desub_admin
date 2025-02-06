@@ -1,6 +1,8 @@
 import { Cancellation } from '@/types/cancellation';
-import { SearchOption, Subscriber } from '@/types/subscriber';
 import { Customer } from '@/types/customer';
+import { Review } from '@/types/review';
+import { Sale } from '@/types/sales';
+import { SearchOption, Subscriber } from '@/types/subscriber';
 
 export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
   { value: 'name', label: '이름', inputType: 'text' },
@@ -46,12 +48,28 @@ export const subscriberSearchOptions: SearchOption<Subscriber>[] = [
   { value: 'expiryDate', label: '구독만료일', inputType: 'date' },
 ];
 
+export const reviewSearchOptions: SearchOption<Review>[] = [
+  { value: 'name', label: '이름', inputType: 'text' },
+  { value: 'email', label: '이메일', inputType: 'text' },
+  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'reviewRating',
+    label: '별점',
+    inputType: 'select',
+    options: [
+      { value: '1', label: '1점' },
+      { value: '2', label: '2점' },
+      { value: '3', label: '3점' },
+      { value: '4', label: '4점' },
+      { value: '5', label: '5점' },
+    ],
+  },
+];
+
 export const customerSearchOptions: SearchOption<Customer>[] = [
   { value: 'name', label: '이름', inputType: 'text' },
   { value: 'email', label: '이메일', inputType: 'text' },
   { value: 'phone', label: '전화번호', inputType: 'text' },
-  {
-    value: 'subscription',
+  { value: 'subscription',
     label: '구독여부',
     inputType: 'select',
     options: [
@@ -75,4 +93,21 @@ export const customerSearchOptions: SearchOption<Customer>[] = [
   { value: 'startDate', label: '최초결제일', inputType: 'date' },
   { value: 'endDate', label: '최근결제일', inputType: 'date' },
   { value: 'expiryDate', label: '구독만료일', inputType: 'date' },
+ ];
+
+export const saleSearchOptions: SearchOption<Sale>[] = [
+  { value: 'payDate', label: '결제일', inputType: 'date' },
+  { value: 'price', label: '금액', inputType: 'text' },
+  {
+    value: 'content',
+    label: '내용',
+    inputType: 'select',
+    options: [
+      { value: '결제', label: '결제' },
+      { value: '구독취소', label: '구독취소' },
+    ],
+  },
+  { value: 'name', label: '이름', inputType: 'text' },
+  { value: 'email', label: '이메일', inputType: 'text' },
+  { value: 'phone', label: '전화번호', inputType: 'text' },
 ];
