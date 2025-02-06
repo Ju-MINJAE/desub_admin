@@ -83,7 +83,7 @@ const Sidebar = () => {
           매출관리
         </Link>
         <Link
-          href="/"
+          href="/customer"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
             pathname === '/customer' ? 'bg-[#F3F3F3] font-bold' : ''
           }`}
