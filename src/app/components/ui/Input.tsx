@@ -27,7 +27,7 @@ export const Input: React.FC<InputProps> = ({
       <input
         className={`
         w-full
-        h-[6rem]
+        h-[4.7rem]
         px-[1.2rem] py-[1.5rem]
         border border-black
         placeholder:text-[#929292]
@@ -39,9 +39,7 @@ export const Input: React.FC<InputProps> = ({
         {...props}
       />
       {helperText && (
-        <p className={`mt-[0.25rem] text-[1.5rem] ${getHelperTextColor()}`}>
-          {helperText}
-        </p>
+        <p className={`mt-[0.25rem] text-[1.5rem] ${getHelperTextColor()}`}>{helperText}</p>
       )}
     </div>
   );

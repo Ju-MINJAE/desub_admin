@@ -1,4 +1,5 @@
 import { Cancellation } from '@/types/cancellation';
+import { Customer, Withdrawal } from '@/types/customer';
 import { Review } from '@/types/review';
 import { Sale } from '@/types/sales';
 import { SearchOption, Subscriber } from '@/types/subscriber';
@@ -65,6 +66,37 @@ export const reviewSearchOptions: SearchOption<Review>[] = [
   },
 ];
 
+export const customerSearchOptions: SearchOption<Customer>[] = [
+  { value: 'name', label: '이름', inputType: 'text' },
+  { value: 'email', label: '이메일', inputType: 'text' },
+  { value: 'phone', label: '전화번호', inputType: 'text' },
+  {
+    value: 'subscription',
+    label: '구독여부',
+    inputType: 'select',
+    options: [
+      { value: '구독중', label: '구독중' },
+      { value: '미구독', label: '미구독' },
+    ],
+  },
+  {
+    value: 'status',
+    label: '구독현황',
+    inputType: 'select',
+    options: [
+      { value: '진행중', label: '진행중' },
+      { value: '일시정지', label: '일시정지' },
+      { value: '구독취소', label: '구독취소' },
+      { value: '-', label: '-' },
+    ],
+  },
+  { value: 'signupDate', label: '가입일', inputType: 'date' },
+  { value: 'lastLoginDate', label: '마지막 방문일', inputType: 'date' },
+  { value: 'startDate', label: '최초결제일', inputType: 'date' },
+  { value: 'endDate', label: '최근결제일', inputType: 'date' },
+  { value: 'expiryDate', label: '구독만료일', inputType: 'date' },
+];
+
 export const saleSearchOptions: SearchOption<Sale>[] = [
   { value: 'payDate', label: '결제일', inputType: 'date' },
   { value: 'price', label: '금액', inputType: 'text' },
@@ -77,6 +109,13 @@ export const saleSearchOptions: SearchOption<Sale>[] = [
       { value: '구독취소', label: '구독취소' },
     ],
   },
+  { value: 'name', label: '이름', inputType: 'text' },
+  { value: 'email', label: '이메일', inputType: 'text' },
+  { value: 'phone', label: '전화번호', inputType: 'text' },
+];
+
+export const withdrawalSearchOptions: SearchOption<Withdrawal>[] = [
+  { value: 'withdrawalDate', label: '탈퇴신청일', inputType: 'date' },
   { value: 'name', label: '이름', inputType: 'text' },
   { value: 'email', label: '이메일', inputType: 'text' },
   { value: 'phone', label: '전화번호', inputType: 'text' },

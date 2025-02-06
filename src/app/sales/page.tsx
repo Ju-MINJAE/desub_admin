@@ -65,32 +65,34 @@ const Sales = () => {
   }, [sales, searchFilter]);
 
   return (
-    <div className="pl-[31.6rem]">
-      <Heading tag="h1" className="mt-[2.1rem]">
-        매출관리
-      </Heading>
-      <SalesCount monthTotalSales={80000000} monthCancelSales={-870000} />
+    <div className="pl-[28.5rem]">
+      <div className="p-[3.1rem]">
+        <Heading tag="h1" className="mt-[2.1rem]">
+          매출관리
+        </Heading>
+        <SalesCount monthTotalSales={80000000} monthCancelSales={-870000} />
 
-      <div className="flex justify-between items-center mt-[4.9rem]">
-        <ExportExcelButton<Sale>
-          data={filteredSubscribers}
-          fileName="매출_목록"
-          headers={{
-            payDate: '결제일',
-            price: '금액(원)',
-            content: '내용',
-            name: '이름',
-            email: '이메일',
-            phone: '전화번호',
-          }}
-        />
-        <Search<Sale> onSearch={handleSearch} searchOptions={saleSearchOptions} />
+        <div className="flex justify-between items-center mt-[4.9rem]">
+          <ExportExcelButton<Sale>
+            data={filteredSubscribers}
+            fileName="매출_목록"
+            headers={{
+              payDate: '결제일',
+              price: '금액(원)',
+              content: '내용',
+              name: '이름',
+              email: '이메일',
+              phone: '전화번호',
+            }}
+          />
+          <Search<Sale> onSearch={handleSearch} searchOptions={saleSearchOptions} />
+        </div>
+
+        <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
+          검색 결과 : {filteredSubscribers.length}
+        </p>
+        <SalesTable subscribers={filteredSubscribers} />
       </div>
-
-      <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-        검색 결과 : {filteredSubscribers.length}
-      </p>
-      <SalesTable subscribers={filteredSubscribers} />
     </div>
   );
 };
