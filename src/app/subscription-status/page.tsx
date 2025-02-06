@@ -6,6 +6,7 @@ import SubscriptionTable from '../components/subscription-status/SubscriotionTab
 import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
 import Search from '../components/subscription-status/Search';
 import { subscriberSearchOptions } from '../constants/searchOptions';
+import { Heading } from '../components/ui/Heading';
 
 export default function SubscriptionStatus() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([
@@ -79,8 +80,11 @@ export default function SubscriptionStatus() {
   return (
     <div className="pl-[28.5rem]">
       <div className="p-[3.1rem]">
-        <h1 className="text-[3.5rem] mt-[2.1rem] font-bold">구독현황관리</h1>
+        <Heading tag="h1" className="mt-[2.1rem]">
+          구독현황관리
+        </Heading>
         <SubscriberCount totalCount={0} newCount={0} pausedCount={0} />
+
         <div className="flex justify-between items-center mt-[4.9rem]">
           <ExportExcelButton<Subscriber>
             data={filteredSubscribers}

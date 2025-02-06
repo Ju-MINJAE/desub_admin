@@ -75,7 +75,7 @@ const Sidebar = () => {
           구독취소관리
         </Link>
         <Link
-          href="/"
+          href="/sales"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
             pathname === '/sales' ? 'bg-[#F3F3F3] font-bold' : ''
           }`}
@@ -99,7 +99,7 @@ const Sidebar = () => {
           킥오프 폼양식 관리
         </Link>
         <Link
-          href="/"
+          href="/review"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
             pathname === '/review' ? 'bg-[#F3F3F3] font-bold' : ''
           }`}

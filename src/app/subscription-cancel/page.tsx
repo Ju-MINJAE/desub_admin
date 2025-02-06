@@ -6,6 +6,7 @@ import Search from '../components/subscription-status/Search';
 import CancellationTable from '../components/subscription-cancel/CancellationTable';
 import RefundModal from '../components/subscription-cancel/RefundModal';
 import { cancellationSearchOptions } from '../constants/searchOptions';
+import { Heading } from '../components/ui/Heading';
 
 export default function SubscriptionCancel() {
   const [cancellations, setCancellations] = useState<Cancellation[]>([
@@ -72,8 +73,9 @@ export default function SubscriptionCancel() {
   return (
     <div className="pl-[28.5rem]">
       <div className="p-[3.1rem]">
-        <h1 className="text-[3.5rem] mt-[2.1rem] font-bold">구독취소관리</h1>
-
+        <Heading tag="h1" className="mt-[2.1rem]">
+          구독취소관리
+        </Heading>
         <div className="mt-[1.8rem]">
           <p className="text-[1.8rem]">
             전체 취소 수 : {cancellations.length}명 | 오늘 신규 취소 : 00명
