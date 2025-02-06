@@ -26,38 +26,7 @@ const Sidebar = () => {
         >
           대시보드
         </Link>
-        <Link
-          href="/"
-          className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/task-request' ? 'bg-[#F3F3F3] font-bold' : ''
-          }`}
-        >
-          작업요청관리
-        </Link>
-        <Link
-          href="/"
-          className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/consultation' ? 'bg-[#F3F3F3] font-bold' : ''
-          }`}
-        >
-          상담예약관리
-        </Link>
-        <Link
-          href="/"
-          className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/online-meeting' ? 'bg-[#F3F3F3] font-bold' : ''
-          }`}
-        >
-          온라인미팅관리
-        </Link>
-        <Link
-          href="/"
-          className={`rounded px-[1.7rem] py-[0.8rem] ${
-            pathname === '/subscription-product' ? 'bg-[#F3F3F3] font-bold' : ''
-          }`}
-        >
-          구독상품관리
-        </Link>
+
         <Link
           href="/subscription-status"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
