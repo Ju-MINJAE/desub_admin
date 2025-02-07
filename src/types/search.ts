@@ -1,7 +1,8 @@
+export type InputType = 'text' | 'date' | 'select';
+
 export interface SearchOption<T> {
   value: keyof T;
   label: string;
-  inputType: 'text' | 'date' | 'select';
+  inputType: InputType;
   options?: { value: string; label: string }[];
-  isDateRange?: boolean;
 }
