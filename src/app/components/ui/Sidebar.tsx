@@ -70,7 +70,7 @@ const Sidebar = () => {
       </div>
       <div className="mt-auto pt-[2rem]">
         <div className="flex flex-col gap-[2.4rem] px-[3.5rem] text-[1.8rem]">
-          <Link href="/">계정관리</Link>
+          <Link href="/admin">계정관리</Link>
           <Link href="/">로그관리</Link>
         </div>
         <p className="mt-[2.4rem] px-[3.3rem] font-light text-[1.3rem]">v1.0</p>
