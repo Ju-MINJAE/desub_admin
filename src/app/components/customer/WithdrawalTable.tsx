@@ -6,9 +6,14 @@ import { useState } from 'react';
 interface WithdrawalTableProps {
   withdrawals: Withdrawal[];
   onWithdraw?: (withdrawal: Withdrawal) => void;
+  onDetail: (withdrawal: Withdrawal) => void;
 }
 
-export default function WithdrawalTable({ withdrawals, onWithdraw }: WithdrawalTableProps) {
+export default function WithdrawalTable({
+  withdrawals,
+  onWithdraw,
+  onDetail,
+}: WithdrawalTableProps) {
   const [sortField, setSortField] = useState<WithdrawalSortField | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
 
@@ -167,7 +172,9 @@ export default function WithdrawalTable({ withdrawals, onWithdraw }: WithdrawalT
             <td className="py-4 text-[1.5rem] text-center">{withdrawal.email}</td>
             <td className="py-4 text-[1.5rem] text-center">{withdrawal.phone}</td>
             <td className="py-4 text-[1.5rem] text-center">
-              <button className="underline text-[1.5rem]">상세보기</button>
+              <button onClick={() => onDetail(withdrawal)} className="underline text-[1.5rem]">
+                상세보기
+              </button>
             </td>
             <td className="py-2 text-center">
               {withdrawal.withdrawalStatus ? (

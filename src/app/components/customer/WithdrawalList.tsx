@@ -7,6 +7,7 @@ import type { Withdrawal } from '@/types/customer';
 import { withdrawalSearchOptions } from '@/app/constants/searchOptions';
 import WithdrawalTable from './WithdrawalTable';
 import WithdrawalConfirmModal from './WithdrawalConfirmModal';
+import WithdrawalReasonModal from './WithdrawalReasonModal';
 
 export default function WithdrawalList() {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([
@@ -43,6 +44,8 @@ export default function WithdrawalList() {
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
   const [selectedWithdrawal, setSelectedWithdrawal] = useState<Withdrawal | null>(null);
+  const [isReasonModalOpen, setIsReasonModalOpen] = useState(false);
+  const [selectedDetailWithdrawal, setSelectedDetailWithdrawal] = useState<Withdrawal | null>(null);
 
   const handleSearch = useCallback(
     (
@@ -85,6 +88,11 @@ export default function WithdrawalList() {
     setIsConfirmModalOpen(true);
   };
 
+  const handleDetailClick = (withdrawal: Withdrawal) => {
+    setSelectedDetailWithdrawal(withdrawal);
+    setIsReasonModalOpen(true);
+  };
+
   const handleConfirmWithdraw = () => {
     if (!selectedWithdrawal) return;
 
@@ -115,7 +123,11 @@ export default function WithdrawalList() {
         검색 결과 : {filteredWithdrawal.length}
       </p>
 
-      <WithdrawalTable withdrawals={filteredWithdrawal} onWithdraw={handleWithdrawClick} />
+      <WithdrawalTable
+        withdrawals={filteredWithdrawal}
+        onWithdraw={handleWithdrawClick}
+        onDetail={handleDetailClick}
+      />
       {selectedWithdrawal && (
         <WithdrawalConfirmModal
           isOpen={isConfirmModalOpen}
@@ -125,6 +137,16 @@ export default function WithdrawalList() {
           }}
           onConfirm={handleConfirmWithdraw}
           customerName={selectedWithdrawal.name}
+        />
+      )}
+      {selectedDetailWithdrawal && (
+        <WithdrawalReasonModal
+          isOpen={isReasonModalOpen}
+          onClose={() => {
+            setIsReasonModalOpen(false);
+            setSelectedDetailWithdrawal(null);
+          }}
+          withdrawal={selectedDetailWithdrawal}
         />
       )}
     </>
