@@ -44,13 +44,13 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
                 <ChevronUp
                   size={14}
                   className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
+                    sortField === 'payDate' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
                   }
                 />
                 <ChevronDown
                   size={14}
                   className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
+                    sortField === 'payDate' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
                   }
                 />
               </span>
@@ -63,13 +63,13 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
                 <ChevronUp
                   size={14}
                   className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
+                    sortField === 'price' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
                   }
                 />
                 <ChevronDown
                   size={14}
                   className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
+                    sortField === 'price' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
                   }
                 />
               </span>
@@ -82,13 +82,13 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
                 <ChevronUp
                   size={14}
                   className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
+                    sortField === 'content' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
                   }
                 />
                 <ChevronDown
                   size={14}
                   className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
+                    sortField === 'content' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
                   }
                 />
               </span>
