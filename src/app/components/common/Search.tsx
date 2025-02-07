@@ -1,8 +1,13 @@
-import { SearchOption } from '@/types/subscriber';
+'use client';
+
+import type { SearchOption } from '@/types/search';
 import { useEffect, useState } from 'react';
 
 interface SearchProps<T> {
-  onSearch: (field: keyof T, value: string) => void;
+  onSearch: (
+    field: keyof T,
+    value: string | { start: string | undefined; end: string | undefined },
+  ) => void;
   searchOptions: SearchOption<T>[];
 }
 
@@ -11,21 +16,41 @@ export default function Search<T>({ onSearch, searchOptions }: SearchProps<T>) {
     searchOptions[0],
   );
   const [searchValue, setSearchValue] = useState<string>('');
+  const [startDate, setStartDate] = useState<string>('');
+  const [endDate, setEndDate] = useState<string>('');
 
   useEffect(() => {
-    onSearch(selectedSearchOption.value, searchValue);
-  }, [searchValue, selectedSearchOption.value]);
+    if (selectedSearchOption.inputType === 'date') {
+      onSearch(selectedSearchOption.value, {
+        start: startDate || undefined,
+        end: endDate || undefined,
+      });
+    } else {
+      onSearch(selectedSearchOption.value, searchValue);
+    }
+  }, [selectedSearchOption, searchValue, startDate, endDate, onSearch]);
 
   const renderSearchInput = () => {
     switch (selectedSearchOption.inputType) {
       case 'date':
         return (
-          <input
-            type="date"
-            value={searchValue}
-            onChange={e => setSearchValue(e.target.value)}
-            className="border p-2 w-[17rem] text-[1.5rem]"
-          />
+          <div className="flex items-center space-x-2">
+            <input
+              type="date"
+              value={startDate}
+              onChange={e => setStartDate(e.target.value)}
+              className="border p-2 w-[12rem] text-[1.5rem]"
+              placeholder="시작일"
+            />
+            <span className="text-[1.5rem]">~</span>
+            <input
+              type="date"
+              value={endDate}
+              onChange={e => setEndDate(e.target.value)}
+              className="border p-2 w-[12rem] text-[1.5rem]"
+              placeholder="종료일"
+            />
+          </div>
         );
       case 'select':
         return (
@@ -56,15 +81,17 @@ export default function Search<T>({ onSearch, searchOptions }: SearchProps<T>) {
   };
 
   return (
-    <div className="space-x-7">
+    <div className="flex gap-4">
       <select
         className="border border-black p-2 w-[17rem] text-[1.5rem]"
         value={selectedSearchOption.value as string}
         onChange={e => {
-          const option = searchOptions.find(opt => opt.value === e.target.value);
+          const option = searchOptions.find(opt => opt.value === (e.target.value as keyof T));
           if (option) {
             setSelectedSearchOption(option);
             setSearchValue('');
+            setStartDate('');
+            setEndDate('');
           }
         }}
       >
