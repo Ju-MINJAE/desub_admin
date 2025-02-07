@@ -37,7 +37,10 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
     <table className="w-full">
       <thead>
         <tr className="border-y bg-[#F3F3F3]">
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('payDate')}>
+          <th
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
+            onClick={() => handleSort('payDate')}
+          >
             <div className="flex items-center justify-center">
               결제일
               <span className="inline-flex flex-col ml-2">
@@ -56,7 +59,10 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
               </span>
             </div>
           </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('price')}>
+          <th
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
+            onClick={() => handleSort('price')}
+          >
             <div className="flex items-center justify-center">
               금액(원)
               <span className="inline-flex flex-col ml-2">
@@ -75,7 +81,10 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
               </span>
             </div>
           </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('content')}>
+          <th
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
+            onClick={() => handleSort('content')}
+          >
             <div className="flex items-center justify-center">
               내용
               <span className="inline-flex flex-col ml-2">
@@ -94,7 +103,10 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
               </span>
             </div>
           </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('name')}>
+          <th
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
+            onClick={() => handleSort('name')}
+          >
             <div className="flex items-center justify-center">
               이름
               <span className="inline-flex flex-col ml-2">
@@ -113,7 +125,10 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
               </span>
             </div>
           </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('email')}>
+          <th
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
+            onClick={() => handleSort('email')}
+          >
             <div className="flex items-center justify-center">
               이메일주소(아이디)
               <span className="inline-flex flex-col ml-2">
@@ -132,7 +147,10 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
               </span>
             </div>
           </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('phone')}>
+          <th
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
+            onClick={() => handleSort('phone')}
+          >
             <div className="flex items-center justify-center">
               전화번호
               <span className="inline-flex flex-col ml-2">
@@ -156,12 +174,12 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
       <tbody>
         {sortedSubscribers.map((subscriber, index) => (
           <tr key={index} className="border-b">
-            <td className="p-4 text-center">{subscriber.payDate}</td>
-            <td className="p-4 text-center">{subscriber.price}</td>
-            <td className="p-4 text-center">{subscriber.content}</td>
-            <td className="p-4 text-center">{subscriber.name}</td>
-            <td className="p-4 text-center">{subscriber.email}</td>
-            <td className="p-4 text-center">{subscriber.phone}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.payDate}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.price}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.content}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.name}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.email}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.phone}</td>
           </tr>
         ))}
       </tbody>
