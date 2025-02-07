@@ -1,4 +1,5 @@
 'use client';
+
 import { useState } from 'react';
 import CustomerList from '../components/customer/CustomerList';
 import { Heading } from '../components/ui/Heading';

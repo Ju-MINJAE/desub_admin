@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 import { Review } from '@/types/review';
 import ReviewTable from '../components/review/ReviewTable';
 import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
-import Search from '../components/subscription-status/Search';
+import Search from '../components/common/Search';
 import { reviewSearchOptions } from '../constants/searchOptions';
 import ReviewModal from '../components/review/ReviewModal';
 
