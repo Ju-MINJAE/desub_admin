@@ -1,10 +1,11 @@
 'use client';
+
 import { useCallback, useMemo, useState } from 'react';
-import { Subscriber } from '@/types/subscriber';
+import type { Subscriber } from '@/types/subscriber';
 import SubscriberCount from '../components/subscription-status/SubscriberCount';
 import SubscriptionTable from '../components/subscription-status/SubscriotionTable';
 import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
-import Search from '../components/subscription-status/Search';
+import Search from '../components/common/Search';
 import { subscriberSearchOptions } from '../constants/searchOptions';
 import { Heading } from '../components/ui/Heading';
 
@@ -35,7 +36,10 @@ export default function SubscriptionStatus() {
     paused: false,
   });
 
-  const [searchFilter, setSearchFilter] = useState({
+  const [searchFilter, setSearchFilter] = useState<{
+    field: keyof Subscriber;
+    value: string | { start: string | undefined; end: string | undefined };
+  }>({
     field: '' as keyof Subscriber,
     value: '',
   });
@@ -47,9 +51,15 @@ export default function SubscriptionStatus() {
     }));
   };
 
-  const handleSearch = useCallback((field: keyof Subscriber, value: string) => {
-    setSearchFilter({ field, value });
-  }, []);
+  const handleSearch = useCallback(
+    (
+      field: keyof Subscriber,
+      value: string | { start: string | undefined; end: string | undefined },
+    ) => {
+      setSearchFilter({ field, value });
+    },
+    [],
+  );
 
   const filteredSubscribers = useMemo(() => {
     let filtered = subscribers;
@@ -66,11 +76,23 @@ export default function SubscriptionStatus() {
       filtered = filtered.filter(subscriber => {
         const fieldValue = subscriber[searchFilter.field];
 
-        if (String(searchFilter.field).includes('Date')) {
-          return String(fieldValue).includes(searchFilter.value);
+        if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
+          if (!searchFilter.value.start && !searchFilter.value.end) {
+            return true;
+          }
+          const subscriberDate = new Date(fieldValue as string);
+          const startDate = searchFilter.value.start
+            ? new Date(searchFilter.value.start)
+            : new Date(0);
+          const endDate = searchFilter.value.end
+            ? new Date(searchFilter.value.end)
+            : new Date(8640000000000000);
+          return subscriberDate >= startDate && subscriberDate <= endDate;
+        } else if (typeof fieldValue === 'string' && typeof searchFilter.value === 'string') {
+          return fieldValue.toLowerCase().includes(searchFilter.value.toLowerCase());
         }
 
-        return String(fieldValue).toLowerCase().includes(searchFilter.value.toLowerCase());
+        return false;
       });
     }
 

@@ -2,7 +2,8 @@ import { Cancellation } from '@/types/cancellation';
 import { Customer, Withdrawal } from '@/types/customer';
 import { Review } from '@/types/review';
 import { Sale } from '@/types/sales';
-import { SearchOption, Subscriber } from '@/types/subscriber';
+import { SearchOption } from '@/types/search';
+import { Subscriber } from '@/types/subscriber';
 
 export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
   { value: 'name', label: '이름', inputType: 'text' },

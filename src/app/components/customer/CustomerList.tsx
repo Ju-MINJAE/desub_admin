@@ -1,7 +1,9 @@
-import { Customer } from '@/types/customer';
+'use client';
+
+import type { Customer } from '@/types/customer';
 import { useCallback, useMemo, useState } from 'react';
 import ExportExcelButton from '../subscription-status/ExportExcelButton';
-import Search from '../subscription-status/Search';
+import Search from '../common/Search';
 import { customerSearchOptions } from '@/app/constants/searchOptions';
 import CustomerTable from './CustomerTable';
 import HistoryModal from './HistoryModal';
@@ -62,7 +64,10 @@ export default function CustomerList() {
     },
   ]);
 
-  const [searchFilter, setSearchFilter] = useState({
+  const [searchFilter, setSearchFilter] = useState<{
+    field: keyof Customer;
+    value: string | { start: string | undefined; end: string | undefined };
+  }>({
     field: '' as keyof Customer,
     value: '',
   });
@@ -70,9 +75,15 @@ export default function CustomerList() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedHistory, setSelectedHistory] = useState<Customer | null>(null);
 
-  const handleSearch = useCallback((field: keyof Customer, value: string) => {
-    setSearchFilter({ field, value });
-  }, []);
+  const handleSearch = useCallback(
+    (
+      field: keyof Customer,
+      value: string | { start: string | undefined; end: string | undefined },
+    ) => {
+      setSearchFilter({ field, value });
+    },
+    [],
+  );
 
   const filteredCustomers = useMemo(() => {
     if (!searchFilter.value) return customers;
@@ -80,11 +91,23 @@ export default function CustomerList() {
     return customers.filter(customer => {
       const fieldValue = customer[searchFilter.field];
 
-      if (String(searchFilter.field).includes('Date')) {
-        return String(fieldValue).includes(searchFilter.value);
+      if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
+        if (!searchFilter.value.start && !searchFilter.value.end) {
+          return true;
+        }
+        const customerDate = new Date(fieldValue as string);
+        const startDate = searchFilter.value.start
+          ? new Date(searchFilter.value.start)
+          : new Date(0);
+        const endDate = searchFilter.value.end
+          ? new Date(searchFilter.value.end)
+          : new Date(8640000000000000);
+        return customerDate >= startDate && customerDate <= endDate;
+      } else if (typeof fieldValue === 'string' && typeof searchFilter.value === 'string') {
+        return fieldValue.toLowerCase().includes(searchFilter.value.toLowerCase());
       }
 
-      return String(fieldValue).toLowerCase().includes(searchFilter.value.toLowerCase());
+      return false;
     });
   }, [customers, searchFilter]);
 
