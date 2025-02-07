@@ -22,6 +22,14 @@
   font-style: normal;
 }
 
+@layer utilities {
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}
+
 html {
   /* 62.5% of 16px browser font size is 10px (16px * 0.625 = 10px) */
   font-size: 62.5%;
