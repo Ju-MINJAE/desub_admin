@@ -4,9 +4,10 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 
 interface AdminListProps {
   admins: Admin[];
+  onDelete: (admin: Admin) => void;
 }
 
-export default function AdminTable({ admins }: AdminListProps) {
+export default function AdminTable({ admins, onDelete }: AdminListProps) {
   const [sortField, setSortField] = useState<keyof Admin | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
@@ -37,7 +38,7 @@ export default function AdminTable({ admins }: AdminListProps) {
       <thead>
         <tr className="border-y bg-[#F3F3F3]">
           <th
-            className="p-4 text-[1.5rem] text-center cursor-pointer"
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
             onClick={() => handleSort('role')}
           >
             <div className="flex items-center justify-center">
@@ -59,7 +60,7 @@ export default function AdminTable({ admins }: AdminListProps) {
             </div>
           </th>
           <th
-            className="p-4 text-[1.5rem] text-center cursor-pointer"
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
             onClick={() => handleSort('email')}
           >
             <div className="flex items-center justify-center">
@@ -81,7 +82,7 @@ export default function AdminTable({ admins }: AdminListProps) {
             </div>
           </th>
           <th
-            className="p-4 text-[1.5rem] text-center cursor-pointer"
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
             onClick={() => handleSort('name')}
           >
             <div className="flex items-center justify-center">
@@ -103,7 +104,7 @@ export default function AdminTable({ admins }: AdminListProps) {
             </div>
           </th>
           <th
-            className="p-4 text-[1.5rem] text-center cursor-pointer"
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
             onClick={() => handleSort('phone')}
           >
             <div className="flex items-center justify-center">
@@ -125,7 +126,7 @@ export default function AdminTable({ admins }: AdminListProps) {
             </div>
           </th>
           <th
-            className="p-4 text-[1.5rem] text-center cursor-pointer"
+            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
             onClick={() => handleSort('createdAt')}
           >
             <div className="flex items-center justify-center">
@@ -150,32 +151,35 @@ export default function AdminTable({ admins }: AdminListProps) {
               </span>
             </div>
           </th>
-          <th className="p-4 text-[1.5rem] text-center">비밀번호 변경</th>
-          <th className="p-4 text-[1.5rem] text-center">계정 삭제</th>
+          <th className="px-3 py-4 text-[1.5rem] text-center">비밀번호 변경</th>
+          <th className="px-3 py-4 text-[1.5rem] text-center">계정 삭제</th>
         </tr>
       </thead>
       <tbody>
         {sortedAdmins.map((admin, index) => (
           <tr key={index} className="border-b">
-            <td className="p-4 text-[1.5rem] text-center">{admin.role}</td>
-            <td className="p-4 text-[1.5rem] text-center">{admin.email}</td>
-            <td className="p-4 text-[1.5rem] text-center">{admin.name}</td>
-            <td className="p-4 text-[1.5rem] text-center">{admin.phone}</td>
-            <td className="p-4 text-[1.5rem] text-center">{admin.createdAt}</td>
-            <td className="p-4 text-[1.5rem] text-center">
+            <td className="py-4 text-[1.5rem] text-center">{admin.role}</td>
+            <td className="py-4 text-[1.5rem] text-center">{admin.email}</td>
+            <td className="py-4 text-[1.5rem] text-center">{admin.name}</td>
+            <td className="py-4 text-[1.5rem] text-center">{admin.phone}</td>
+            <td className="py-4 text-[1.5rem] text-center">{admin.createdAt}</td>
+            <td className="py-4 text-[1.5rem] text-center">
               {admin.passwordChangedAt === '변경' ? (
                 <button className="underline">변경</button>
               ) : (
                 admin.passwordChangedAt
               )}
             </td>
-            <td className="p-4 text-[1.5rem] text-center">
-              {admin.status === '삭제' ? (
-                <button className="w-[7rem] px-4 py-2 border border-black rounded-[1.2rem]">
+            <td className="py-2 text-[1.5rem] text-center">
+              {admin.status === true ? (
+                <button
+                  onClick={() => onDelete?.(admin)}
+                  className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
+                >
                   삭제
                 </button>
               ) : (
-                admin.status
+                <p>-</p>
               )}
             </td>
           </tr>

@@ -4,16 +4,16 @@ import { useState, useCallback, useMemo } from 'react';
 import { Admin } from '@/types/admin';
 import Search from '../components/common/Search';
 import AdminForm from '../components/admin/AdminForm';
-import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
 import AdminTable from '../components/admin/AdminTable';
 import { adminSearchOptions } from '../constants/searchOptions';
+import AdminDeleteModal from '../components/admin/AdminDeleteModal';
 
 export default function AdminManagement() {
   const [isFormView, setIsFormView] = useState(false);
-  const [admins] = useState<Admin[]>([
+  const [admins, setAdmins] = useState<Admin[]>([
     {
       role: 'Master',
-      email: 'gildong.hong@gmail.com',
+      email: 'master.hong@gmail.com',
       name: '홍길동',
       phone: '010-1234-5678',
       createdAt: '-',
@@ -27,7 +27,7 @@ export default function AdminManagement() {
       phone: '010-1234-5678',
       createdAt: '2015-01-14',
       passwordChangedAt: '변경',
-      status: '삭제',
+      status: true,
     },
   ]);
 
@@ -49,10 +49,29 @@ export default function AdminManagement() {
     [],
   );
 
-  const filteredAdmins = useMemo(() => {
-    if (!searchFilter.value) return admins;
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+  const handleDeleteClick = (admin: Admin) => {
+    setSelectedAdmin(admin);
+    setIsDeleteModalOpen(true);
+  };
 
-    return admins.filter(admin => {
+  const handleConfirmDelete = () => {
+    if (!selectedAdmin) return;
+
+    setAdmins(prev =>
+      prev.map(a => (a.email === selectedAdmin.email ? { ...a, status: false } : a)),
+    );
+    alert('삭제 처리가 완료되었습니다.');
+    setIsDeleteModalOpen(false);
+    setSelectedAdmin(null);
+  };
+
+  const filteredAdmins = useMemo(() => {
+    const activeAdmins = admins.filter(admin => admin.status === true || admin.status === '-');
+    if (!searchFilter.value) return activeAdmins;
+
+    return activeAdmins.filter(admin => {
       const fieldValue = admin[searchFilter.field];
 
       if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
@@ -92,20 +111,7 @@ export default function AdminManagement() {
           </button>
         </div>
 
-        <div className="flex justify-between items-center mt-[4.9rem]">
-          <ExportExcelButton
-            data={admins}
-            fileName="관리자_목록"
-            headers={{
-              role: '분류',
-              email: '이메일주소(아이디)',
-              name: '이름',
-              phone: '전화번호',
-              createdAt: '계정 생성일',
-              passwordChangedAt: '비밀번호 변경',
-              status: '계정 삭제',
-            }}
-          />
+        <div className="flex justify-end mt-[1rem]">
           <Search<Admin> onSearch={handleSearch} searchOptions={adminSearchOptions} />
         </div>
 
@@ -113,7 +119,17 @@ export default function AdminManagement() {
           검색 결과 : {filteredAdmins.length}
         </p>
 
-        <AdminTable admins={filteredAdmins} />
+        <AdminTable admins={filteredAdmins} onDelete={handleDeleteClick} />
+        {selectedAdmin && (
+          <AdminDeleteModal
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false);
+              setSelectedAdmin(null);
+            }}
+            onConfirm={handleConfirmDelete}
+          />
+        )}
       </div>
     </div>
   );

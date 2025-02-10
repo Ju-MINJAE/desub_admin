@@ -5,7 +5,7 @@ export interface Admin {
   phone: string;
   createdAt: string;
   passwordChangedAt: string;
-  status: string;
+  status: boolean | '-';
 }
 
 export interface AdminFormData {
