@@ -1,7 +1,8 @@
 import { Withdrawal, WithdrawalSortField } from '@/types/customer';
 import { SortOrder } from '@/types/subscriber';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useState } from 'react';
+import SortableHeader from '../common/SortableHeader';
+import { HeaderItem } from '@/types/tableHeader';
 
 interface WithdrawalTableProps {
   withdrawals: Withdrawal[];
@@ -19,7 +20,12 @@ export default function WithdrawalTable({
 
   const handleSort = (field: WithdrawalSortField) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortField(null);
+        setSortOrder('asc');
+      }
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -39,129 +45,35 @@ export default function WithdrawalTable({
     }
   });
 
+  const COMBINED_HEADERS: HeaderItem<WithdrawalSortField>[] = [
+    { field: 'withdrawalDate', label: '탈퇴신청일', type: 'sortable' },
+    { field: 'name', label: '이름', type: 'sortable' },
+    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'phone', label: '전화번호', type: 'sortable' },
+    { field: undefined, label: '탈퇴사유', type: 'static' },
+    { field: 'withdrawalStatus', label: '탈퇴처리', type: 'sortable' },
+  ];
+
   return (
     <table className="w-full">
       <thead>
         <tr className="border-y bg-[#F3F3F3]">
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('withdrawalDate')}
-          >
-            <div className="flex items-center justify-center pl-3">
-              탈퇴신청일
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'withdrawalDate' && sortOrder === 'asc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'withdrawalDate' && sortOrder === 'desc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('name')}
-          >
-            <div className="flex items-center justify-center pl-3">
-              이름
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('email')}
-          >
-            <div className="flex items-center justify-center">
-              이메일주소(아이디)
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('phone')}
-          >
-            <div className="flex items-center justify-center">
-              전화번호
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="px-3 py-4 text-[1.5rem] text-center">탈퇴사유</th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('withdrawalStatus')}
-          >
-            <div className="flex items-center justify-center">
-              탈퇴처리
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'withdrawalStatus' && sortOrder === 'asc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'withdrawalStatus' && sortOrder === 'desc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
+          {COMBINED_HEADERS.map((header, index) =>
+            header.type === 'sortable' && header.field ? (
+              <SortableHeader<WithdrawalSortField>
+                key={header.field}
+                field={header.field}
+                label={header.label}
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
+            ) : (
+              <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
+                {header.label}
+              </th>
+            ),
+          )}
         </tr>
       </thead>
       <tbody>

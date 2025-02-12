@@ -1,7 +1,8 @@
 import { Review, ReviewSortField } from '@/types/review';
 import { SortOrder } from '@/types/subscriber';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { HeaderItem } from '@/types/tableHeader';
 import React, { useState } from 'react';
+import SortableHeader from '../common/SortableHeader';
 
 interface SubscriptionTableProps {
   subscribers: Review[];
@@ -14,7 +15,12 @@ export default function ReviewTable({ subscribers, onReviewSelect }: Subscriptio
 
   const handleSort = (field: ReviewSortField) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortField(null);
+        setSortOrder('asc');
+      }
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -34,108 +40,34 @@ export default function ReviewTable({ subscribers, onReviewSelect }: Subscriptio
     }
   });
 
+  const COMBINED_HEADERS: HeaderItem<ReviewSortField>[] = [
+    { field: 'name', label: '이름', type: 'sortable' },
+    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'phone', label: '전화번호', type: 'sortable' },
+    { field: 'reviewRating', label: '별점', type: 'sortable' },
+    { field: undefined, label: '리뷰내용', type: 'static' },
+  ];
+
   return (
     <table className="w-full">
       <thead>
         <tr className="border-y bg-[#F3F3F3]">
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('name')}
-          >
-            <div className="flex items-center justify-center pl-3">
-              이름
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('email')}
-          >
-            <div className="flex items-center justify-center">
-              이메일주소(아이디)
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('phone')}
-          >
-            <div className="flex items-center justify-center">
-              전화번호
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('reviewRating')}
-          >
-            <div className="flex items-center justify-center">
-              별점
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'reviewRating' && sortOrder === 'asc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'reviewRating' && sortOrder === 'desc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('phone')}
-          >
-            <div className="flex items-center justify-center">리뷰내용</div>
-          </th>
+          {COMBINED_HEADERS.map((header, index) =>
+            header.type === 'sortable' && header.field ? (
+              <SortableHeader<ReviewSortField>
+                key={header.field}
+                field={header.field}
+                label={header.label}
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
+            ) : (
+              <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
+                {header.label}
+              </th>
+            ),
+          )}
         </tr>
       </thead>
       <tbody>

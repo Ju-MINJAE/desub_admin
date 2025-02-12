@@ -4,10 +4,10 @@ import { useCallback, useMemo, useState } from 'react';
 import type { Subscriber } from '@/types/subscriber';
 import SubscriberCount from '../components/subscription-status/SubscriberCount';
 import SubscriptionTable from '../components/subscription-status/SubscriotionTable';
-import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
 import Search from '../components/common/Search';
 import { subscriberSearchOptions } from '../constants/searchOptions';
 import { Heading } from '../components/ui/Heading';
+import ExportExcelButton from '../components/common/ExportExcelButton';
 
 export default function SubscriptionStatus() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([
