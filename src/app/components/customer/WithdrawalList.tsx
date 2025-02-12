@@ -2,12 +2,12 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import Search from '../common/Search';
-import ExportExcelButton from '../subscription-status/ExportExcelButton';
 import type { Withdrawal } from '@/types/customer';
 import { withdrawalSearchOptions } from '@/app/constants/searchOptions';
 import WithdrawalTable from './WithdrawalTable';
 import WithdrawalConfirmModal from './WithdrawalConfirmModal';
 import WithdrawalReasonModal from './WithdrawalReasonModal';
+import ExportExcelButton from '../common/ExportExcelButton';
 
 export default function WithdrawalList() {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([
@@ -107,7 +107,7 @@ export default function WithdrawalList() {
   return (
     <>
       <div className="flex justify-between items-center mt-[4.9rem]">
-        <ExportExcelButton
+        <ExportExcelButton<Withdrawal>
           data={withdrawals}
           fileName="탈퇴회원_목록"
           headers={{

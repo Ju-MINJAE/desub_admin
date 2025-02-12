@@ -2,12 +2,12 @@
 
 import { useCallback, useMemo, useState } from 'react';
 import type { Sale } from '@/types/sales';
-import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
 import { saleSearchOptions } from '../constants/searchOptions';
 import SalesTable from '../components/sales/SalesTable';
 import SalesCount from '../components/sales/SalesCount';
 import { Heading } from '../components/ui/Heading';
 import Search from '../components/common/Search';
+import ExportExcelButton from '../components/common/ExportExcelButton';
 
 export default function Sales() {
   const [sales, setSales] = useState<Sale[]>([

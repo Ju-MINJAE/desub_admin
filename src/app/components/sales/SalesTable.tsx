@@ -1,7 +1,7 @@
 import { Sale, SaleSortField } from '@/types/sales';
 import { SortOrder } from '@/types/subscriber';
-import { ChevronDown, ChevronUp } from 'lucide-react';
 import React, { useState } from 'react';
+import SortableHeader from '../common/SortableHeader';
 
 interface SubscriptionTableProps {
   subscribers: Sale[];
@@ -13,7 +13,12 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
 
   const handleSort = (field: SaleSortField) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortField(null);
+        setSortOrder('asc');
+      }
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -33,135 +38,40 @@ export default function SalesTable({ subscribers }: SubscriptionTableProps) {
     }
   });
 
+  const TABLE_HEADERS: Array<{ field: SaleSortField; label: string }> = [
+    { field: 'payDate', label: '결제일' },
+    { field: 'price', label: '금액(원)' },
+    { field: 'content', label: '내용' },
+    { field: 'name', label: '이름' },
+    { field: 'email', label: '이메일주소(아이디)' },
+    { field: 'phone', label: '전화번호' },
+  ];
+
   return (
     <table className="w-full">
       <thead>
         <tr className="border-y bg-[#F3F3F3]">
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('payDate')}>
-            <div className="flex items-center justify-center">
-              결제일
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'payDate' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'payDate' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('price')}>
-            <div className="flex items-center justify-center">
-              금액(원)
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'price' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'price' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('content')}>
-            <div className="flex items-center justify-center">
-              내용
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'content' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'content' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('name')}>
-            <div className="flex items-center justify-center">
-              이름
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('email')}>
-            <div className="flex items-center justify-center">
-              이메일주소(아이디)
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="p-4 text-center cursor-pointer" onClick={() => handleSort('phone')}>
-            <div className="flex items-center justify-center">
-              전화번호
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
+          {TABLE_HEADERS.map(({ field, label }) => (
+            <SortableHeader<SaleSortField>
+              key={field}
+              field={field}
+              label={label}
+              sortField={sortField}
+              sortOrder={sortOrder}
+              onSort={handleSort}
+            />
+          ))}
         </tr>
       </thead>
       <tbody>
         {sortedSubscribers.map((subscriber, index) => (
           <tr key={index} className="border-b">
-            <td className="p-4 text-center">{subscriber.payDate}</td>
-            <td className="p-4 text-center">{subscriber.price}</td>
-            <td className="p-4 text-center">{subscriber.content}</td>
-            <td className="p-4 text-center">{subscriber.name}</td>
-            <td className="p-4 text-center">{subscriber.email}</td>
-            <td className="p-4 text-center">{subscriber.phone}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.payDate}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.price}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.content}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.name}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.email}</td>
+            <td className="py-4 text-[1.5rem] text-center">{subscriber.phone}</td>
           </tr>
         ))}
       </tbody>

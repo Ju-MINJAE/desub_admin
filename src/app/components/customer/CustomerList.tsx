@@ -2,11 +2,11 @@
 
 import type { Customer } from '@/types/customer';
 import { useCallback, useMemo, useState } from 'react';
-import ExportExcelButton from '../subscription-status/ExportExcelButton';
 import Search from '../common/Search';
 import { customerSearchOptions } from '@/app/constants/searchOptions';
 import CustomerTable from './CustomerTable';
 import HistoryModal from './HistoryModal';
+import ExportExcelButton from '../common/ExportExcelButton';
 
 export default function CustomerList() {
   const [customers, setCustomers] = useState<Customer[]>([

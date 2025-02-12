@@ -1,6 +1,7 @@
 import { Cancellation } from '@/types/cancellation';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { HeaderItem } from '@/types/tableHeader';
 import { useMemo, useState } from 'react';
+import SortableHeader from '../common/SortableHeader';
 
 interface CancellationTableProps {
   cancellations: Cancellation[];
@@ -12,10 +13,13 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
 
   const handleSort = (field: keyof Cancellation) => {
-    if (field === 'cancelReason' || field === 'refundStatus') return;
-
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortField(null);
+        setSortOrder('asc');
+      }
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -37,104 +41,35 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
     });
   }, [cancellations, sortField, sortOrder]);
 
+  const COMBINED_HEADERS: HeaderItem<keyof Cancellation>[] = [
+    { field: 'name', label: '이름', type: 'sortable' },
+    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'phone', label: '전화번호', type: 'sortable' },
+    { field: 'cancelDate', label: '취소일자', type: 'sortable' },
+    { field: undefined, label: '취소사유', type: 'static' },
+    { field: undefined, label: '환불처리', type: 'static' },
+  ];
+
   return (
     <table className="w-full">
       <thead>
         <tr className="border-y bg-[#F3F3F3]">
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('name')}
-          >
-            <div className="flex items-center justify-center pl-3">
-              이름
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('email')}
-          >
-            <div className="flex items-center justify-center">
-              이메일주소(아이디)
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('phone')}
-          >
-            <div className="flex items-center justify-center">
-              전화번호
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('cancelDate')}
-          >
-            <div className="flex items-center justify-center">
-              취소일자
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'cancelDate' && sortOrder === 'asc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'cancelDate' && sortOrder === 'desc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="px-3 py-4 text-[1.5rem] text-center">취소사유</th>
-          <th className="px-3 py-4 text-[1.5rem] text-center">환불처리</th>
+          {COMBINED_HEADERS.map((header, index) =>
+            header.type === 'sortable' && header.field ? (
+              <SortableHeader<keyof Cancellation>
+                key={header.field}
+                field={header.field}
+                label={header.label}
+                sortField={sortField}
+                sortOrder={sortOrder}
+                onSort={handleSort}
+              />
+            ) : (
+              <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
+                {header.label}
+              </th>
+            ),
+          )}
         </tr>
       </thead>
       <tbody>
