@@ -1,8 +1,9 @@
 import { SortOrder } from '@/types/subscriber';
 import { Customer, CustomerSortField } from '@/types/customer';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import SortableHeader from '../common/SortableHeader';
 import { HeaderItem } from '@/types/tableHeader';
+import Pagination from '../common/Pagination';
 
 interface CustomerTableProps {
   customers: Customer[];
@@ -12,6 +13,8 @@ interface CustomerTableProps {
 export default function CustomerTable({ customers, onHistoryClick }: CustomerTableProps) {
   const [sortField, setSortField] = useState<CustomerSortField | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5; // 한 페이지에 나올 아이템 수
 
   const handleSort = (field: CustomerSortField) => {
     if (sortField === field) {
@@ -40,6 +43,12 @@ export default function CustomerTable({ customers, onHistoryClick }: CustomerTab
     }
   });
 
+  const paginatedCustomers = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedCustomers.slice(startIndex, endIndex);
+  }, [sortedCustomers, currentPage]);
+
   const COMBINED_HEADERS: HeaderItem<CustomerSortField>[] = [
     { field: 'name', label: '이름', type: 'sortable' },
     { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
@@ -56,52 +65,63 @@ export default function CustomerTable({ customers, onHistoryClick }: CustomerTab
   ];
 
   return (
-    <table className="w-full">
-      <thead>
-        <tr className="border-y bg-[#F3F3F3]">
-          {COMBINED_HEADERS.map((header, index) =>
-            header.type === 'sortable' && header.field ? (
-              <SortableHeader<CustomerSortField>
-                key={header.field}
-                field={header.field}
-                label={header.label}
-                sortField={sortField}
-                sortOrder={sortOrder}
-                onSort={handleSort}
-              />
-            ) : (
-              <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
-                {header.label}
-              </th>
-            ),
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {sortedCustomers.map((customer, index) => (
-          <tr key={index} className="border-b">
-            <td className="py-4 text-[1.5rem] text-center">{customer.name}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.email}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.phone}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.subscription}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.status}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.signupDate}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.lastLoginDate}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.markegtingConsent}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.startDate}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.endDate}</td>
-            <td className="py-4 text-[1.5rem] text-center">{customer.expiryDate}</td>
-            <td className="py-4 text-[1.5rem] text-center">
-              <button
-                onClick={() => onHistoryClick(customer)}
-                className="w-[7rem] text-[1.2rem] underline underline-offset-4"
-              >
-                상세보기
-              </button>
-            </td>
+    <div className="overflow-x-auto">
+      <table className="w-full whitespace-nowrap">
+        <thead>
+          <tr className="border-y bg-[#F3F3F3]">
+            {COMBINED_HEADERS.map((header, index) =>
+              header.type === 'sortable' && header.field ? (
+                <SortableHeader<CustomerSortField>
+                  key={header.field}
+                  field={header.field}
+                  label={header.label}
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
+              ) : (
+                <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
+                  {header.label}
+                </th>
+              ),
+            )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {paginatedCustomers.map((customer, index) => (
+            <tr key={index} className="border-b">
+              <td className="py-4 text-[1.5rem] text-center">{customer.name}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.email}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.phone}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.subscription}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.status}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.signupDate}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.lastLoginDate}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.markegtingConsent}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.startDate}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.endDate}</td>
+              <td className="py-4 text-[1.5rem] text-center">{customer.expiryDate}</td>
+              <td className="py-4 text-[1.5rem] text-center">
+                <button
+                  onClick={() => onHistoryClick(customer)}
+                  className="w-[7rem] text-[1.2rem] underline underline-offset-4"
+                >
+                  상세보기
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {customers.length > itemsPerPage && (
+        <Pagination
+          totalItems={customers.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
+      )}
+    </div>
   );
 }

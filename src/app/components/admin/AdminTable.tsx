@@ -1,8 +1,9 @@
 import { Admin } from '@/types/admin';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import SortableHeader from '../common/SortableHeader';
 import { HeaderItem } from '@/types/tableHeader';
 import PasswordChangeModal from './PasswordChangeModal';
+import Pagination from '../common/Pagination';
 
 interface AdminListProps {
   admins: Admin[];
@@ -14,6 +15,8 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // 한 페이지에 나올 아이템 수
 
   const handleSort = (field: keyof Admin) => {
     if (sortField === field) {
@@ -47,6 +50,12 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
     }
   });
 
+  const paginatedAdmins = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedAdmins.slice(startIndex, endIndex);
+  }, [sortedAdmins, currentPage]);
+
   const COMBINED_HEADERS: HeaderItem<keyof Admin>[] = [
     { field: 'role', label: '분류', type: 'sortable' },
     { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
@@ -58,8 +67,8 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
   ];
 
   return (
-    <>
-      <table className="w-full">
+    <div className="overflow-x-auto">
+      <table className="w-full whitespace-nowrap">
         <thead>
           <tr className="border-y bg-[#F3F3F3]">
             {COMBINED_HEADERS.map((header, index) =>
@@ -81,7 +90,7 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
           </tr>
         </thead>
         <tbody>
-          {sortedAdmins.map((admin, index) => (
+          {paginatedAdmins.map((admin, index) => (
             <tr key={index} className="border-b">
               <td className="py-4 text-[1.5rem] text-center">{admin.role}</td>
               <td className="py-4 text-[1.5rem] text-center">{admin.email}</td>
@@ -119,6 +128,15 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
           ))}
         </tbody>
       </table>
+      {admins.length > itemsPerPage && (
+        <Pagination
+          totalItems={admins.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
+      )}
+
       {selectedAdmin && (
         <PasswordChangeModal
           isOpen={isPasswordModalOpen}
@@ -130,6 +148,6 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
           onSubmit={handlePasswordChange}
         />
       )}
-    </>
+    </div>
   );
 }

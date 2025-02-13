@@ -43,7 +43,7 @@ const ReviewPage = () => {
     setIsModalOpen(true);
   }, []);
 
-  const filteredSubscribers = useMemo(() => {
+  const filteredReviews = useMemo(() => {
     let filtered = reviews;
 
     if (searchFilter.value) {
@@ -72,7 +72,7 @@ const ReviewPage = () => {
 
         <div className="flex justify-between items-center mt-[4.9rem]">
           <ExportExcelButton<Review>
-            data={filteredSubscribers}
+            data={filteredReviews}
             fileName="리뷰_목록"
             headers={{
               name: '이름',
@@ -86,9 +86,9 @@ const ReviewPage = () => {
         </div>
 
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredSubscribers.length}
+          검색 결과 : {filteredReviews.length}
         </p>
-        <ReviewTable subscribers={filteredSubscribers} onReviewSelect={handleReviewSelect} />
+        <ReviewTable reviews={filteredReviews} onReviewSelect={handleReviewSelect} />
 
         {selectedReview && (
           <ReviewModal

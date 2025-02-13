@@ -52,7 +52,7 @@ export default function Sales() {
     [],
   );
 
-  const filteredSubscribers = useMemo(() => {
+  const filteredSales = useMemo(() => {
     let filtered = sales;
 
     if (searchFilter.value) {
@@ -92,7 +92,7 @@ export default function Sales() {
 
         <div className="flex justify-between items-center mt-[4.9rem]">
           <ExportExcelButton<Sale>
-            data={filteredSubscribers}
+            data={filteredSales}
             fileName="매출_목록"
             headers={{
               payDate: '결제일',
@@ -107,9 +107,9 @@ export default function Sales() {
         </div>
 
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredSubscribers.length}
+          검색 결과 : {filteredSales.length}
         </p>
-        <SalesTable subscribers={filteredSubscribers} />
+        <SalesTable sales={filteredSales} />
       </div>
     </div>
   );
