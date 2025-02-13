@@ -2,6 +2,7 @@ import { Admin } from '@/types/admin';
 import { useState } from 'react';
 import SortableHeader from '../common/SortableHeader';
 import { HeaderItem } from '@/types/tableHeader';
+import PasswordChangeModal from './PasswordChangeModal';
 
 interface AdminListProps {
   admins: Admin[];
@@ -11,6 +12,8 @@ interface AdminListProps {
 export default function AdminTable({ admins, onDelete }: AdminListProps) {
   const [sortField, setSortField] = useState<keyof Admin | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
 
   const handleSort = (field: keyof Admin) => {
     if (sortField === field) {
@@ -24,6 +27,11 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
       setSortField(field);
       setSortOrder('asc');
     }
+  };
+
+  const handlePasswordChange = (newPassword: string) => {
+    // API 연동 후 비밀번호 변경 처리필요
+    console.log('Password changed:', newPassword);
   };
 
   const sortedAdmins = [...admins].sort((a, b) => {
@@ -50,57 +58,78 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
   ];
 
   return (
-    <table className="w-full">
-      <thead>
-        <tr className="border-y bg-[#F3F3F3]">
-          {COMBINED_HEADERS.map((header, index) =>
-            header.type === 'sortable' && header.field ? (
-              <SortableHeader<keyof Admin>
-                key={header.field}
-                field={header.field}
-                label={header.label}
-                sortField={sortField}
-                sortOrder={sortOrder}
-                onSort={handleSort}
-              />
-            ) : (
-              <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
-                {header.label}
-              </th>
-            ),
-          )}
-        </tr>
-      </thead>
-      <tbody>
-        {sortedAdmins.map((admin, index) => (
-          <tr key={index} className="border-b">
-            <td className="py-4 text-[1.5rem] text-center">{admin.role}</td>
-            <td className="py-4 text-[1.5rem] text-center">{admin.email}</td>
-            <td className="py-4 text-[1.5rem] text-center">{admin.name}</td>
-            <td className="py-4 text-[1.5rem] text-center">{admin.phone}</td>
-            <td className="py-4 text-[1.5rem] text-center">{admin.createdAt}</td>
-            <td className="py-4 text-[1.5rem] text-center">
-              {admin.passwordChangedAt === '변경' ? (
-                <button className="underline">변경</button>
+    <>
+      <table className="w-full">
+        <thead>
+          <tr className="border-y bg-[#F3F3F3]">
+            {COMBINED_HEADERS.map((header, index) =>
+              header.type === 'sortable' && header.field ? (
+                <SortableHeader<keyof Admin>
+                  key={header.field}
+                  field={header.field}
+                  label={header.label}
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
+                />
               ) : (
-                admin.passwordChangedAt
-              )}
-            </td>
-            <td className="py-2 text-[1.5rem] text-center">
-              {admin.status === true ? (
-                <button
-                  onClick={() => onDelete?.(admin)}
-                  className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
-                >
-                  삭제
-                </button>
-              ) : (
-                <p>-</p>
-              )}
-            </td>
+                <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
+                  {header.label}
+                </th>
+              ),
+            )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {sortedAdmins.map((admin, index) => (
+            <tr key={index} className="border-b">
+              <td className="py-4 text-[1.5rem] text-center">{admin.role}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.email}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.name}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.phone}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.createdAt}</td>
+              <td className="py-4 text-[1.5rem] text-center">
+                {admin.passwordChangedAt === '변경' ? (
+                  <button
+                    className="underline"
+                    onClick={() => {
+                      setSelectedAdmin(admin);
+                      setIsPasswordModalOpen(true);
+                    }}
+                  >
+                    변경
+                  </button>
+                ) : (
+                  admin.passwordChangedAt
+                )}
+              </td>
+              <td className="py-2 text-[1.5rem] text-center">
+                {admin.status === true ? (
+                  <button
+                    onClick={() => onDelete?.(admin)}
+                    className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
+                  >
+                    삭제
+                  </button>
+                ) : (
+                  <p>-</p>
+                )}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      {selectedAdmin && (
+        <PasswordChangeModal
+          isOpen={isPasswordModalOpen}
+          onClose={() => {
+            setIsPasswordModalOpen(false);
+            setSelectedAdmin(null);
+          }}
+          email={selectedAdmin.email}
+          onSubmit={handlePasswordChange}
+        />
+      )}
+    </>
   );
 }
