@@ -32,6 +32,27 @@ export default function WithdrawalList() {
       phone: '010-1234-5670',
       withdrawalStatus: true,
     },
+    {
+      withdrawalDate: '2025-01-13',
+      name: '홍길동3',
+      email: 'gildong.hong@gmail.com',
+      phone: '010-1234-5670',
+      withdrawalStatus: true,
+    },
+    {
+      withdrawalDate: '2025-01-13',
+      name: '홍길동3',
+      email: 'gildong.hong@gmail.com',
+      phone: '010-1234-5670',
+      withdrawalStatus: true,
+    },
+    {
+      withdrawalDate: '2025-01-13',
+      name: '홍길동3',
+      email: 'gildong.hong@gmail.com',
+      phone: '010-1234-5670',
+      withdrawalStatus: true,
+    },
   ]);
 
   const [searchFilter, setSearchFilter] = useState<{
