@@ -1,16 +1,16 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
-import Search from '../components/subscription-status/Search';
+import type { Sale } from '@/types/sales';
 import { saleSearchOptions } from '../constants/searchOptions';
-import { Sale } from '@/types/sales';
 import SalesTable from '../components/sales/SalesTable';
 import SalesCount from '../components/sales/SalesCount';
 import { Heading } from '../components/ui/Heading';
+import Search from '../components/common/Search';
+import ExportExcelButton from '../components/common/ExportExcelButton';
 
-const Sales = () => {
-  const [sales, _] = useState<Sale[]>([
+export default function Sales() {
+  const [sales, setSales] = useState<Sale[]>([
     {
       payDate: '2025-01-13',
       price: '1,500,000',
@@ -37,27 +37,45 @@ const Sales = () => {
     },
   ]);
 
-  const [searchFilter, setSearchFilter] = useState({
+  const [searchFilter, setSearchFilter] = useState<{
+    field: keyof Sale;
+    value: string | { start: string | undefined; end: string | undefined };
+  }>({
     field: '' as keyof Sale,
     value: '',
   });
 
-  const handleSearch = useCallback((field: keyof Sale, value: string) => {
-    setSearchFilter({ field, value });
-  }, []);
+  const handleSearch = useCallback(
+    (field: keyof Sale, value: string | { start: string | undefined; end: string | undefined }) => {
+      setSearchFilter({ field, value });
+    },
+    [],
+  );
 
-  const filteredSubscribers = useMemo(() => {
+  const filteredSales = useMemo(() => {
     let filtered = sales;
 
     if (searchFilter.value) {
       filtered = filtered.filter(sale => {
         const fieldValue = sale[searchFilter.field];
 
-        if (String(searchFilter.field).includes('Date')) {
-          return String(fieldValue).includes(searchFilter.value);
+        if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
+          if (!searchFilter.value.start && !searchFilter.value.end) {
+            return true;
+          }
+          const saleDate = new Date(fieldValue as string);
+          const startDate = searchFilter.value.start
+            ? new Date(searchFilter.value.start)
+            : new Date(0);
+          const endDate = searchFilter.value.end
+            ? new Date(searchFilter.value.end)
+            : new Date(8640000000000000);
+          return saleDate >= startDate && saleDate <= endDate;
+        } else if (typeof fieldValue === 'string' && typeof searchFilter.value === 'string') {
+          return fieldValue.toLowerCase().includes(searchFilter.value.toLowerCase());
         }
 
-        return String(fieldValue).toLowerCase().includes(searchFilter.value.toLowerCase());
+        return false;
       });
     }
 
@@ -74,7 +92,7 @@ const Sales = () => {
 
         <div className="flex justify-between items-center mt-[4.9rem]">
           <ExportExcelButton<Sale>
-            data={filteredSubscribers}
+            data={filteredSales}
             fileName="매출_목록"
             headers={{
               payDate: '결제일',
@@ -89,12 +107,10 @@ const Sales = () => {
         </div>
 
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredSubscribers.length}
+          검색 결과 : {filteredSales.length}
         </p>
-        <SalesTable subscribers={filteredSubscribers} />
+        <SalesTable sales={filteredSales} />
       </div>
     </div>
   );
-};
-
-export default Sales;
+}

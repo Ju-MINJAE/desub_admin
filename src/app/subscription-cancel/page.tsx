@@ -1,15 +1,17 @@
 'use client';
+
 import { useCallback, useMemo, useState } from 'react';
-import { Cancellation } from '@/types/cancellation';
-import ExportExcelButton from '../components/subscription-status/ExportExcelButton';
-import Search from '../components/subscription-status/Search';
+import type { Cancellation } from '@/types/cancellation';
+
 import CancellationTable from '../components/subscription-cancel/CancellationTable';
 import RefundModal from '../components/subscription-cancel/RefundModal';
 import { cancellationSearchOptions } from '../constants/searchOptions';
 import { Heading } from '../components/ui/Heading';
+import Search from '../components/common/Search';
+import ExportExcelButton from '../components/common/ExportExcelButton';
 
 export default function SubscriptionCancel() {
-  const [cancellations, setCancellations] = useState<Cancellation[]>([
+  const [cancellations, _] = useState<Cancellation[]>([
     {
       name: '홍길동',
       email: 'gildong.hong@gmail.com',
@@ -30,17 +32,26 @@ export default function SubscriptionCancel() {
     },
   ]);
 
-  const [searchFilter, setSearchFilter] = useState({
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCancellation, setSelectedCancellation] = useState<Cancellation | null>(null);
+
+  const [searchFilter, setSearchFilter] = useState<{
+    field: keyof Cancellation;
+    value: string | { start: string | undefined; end: string | undefined };
+  }>({
     field: '' as keyof Cancellation,
     value: '',
   });
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCancellation, setSelectedCancellation] = useState<Cancellation | null>(null);
-
-  const handleSearch = useCallback((field: keyof Cancellation, value: string) => {
-    setSearchFilter({ field, value });
-  }, []);
+  const handleSearch = useCallback(
+    (
+      field: keyof Cancellation,
+      value: string | { start: string | undefined; end: string | undefined },
+    ) => {
+      setSearchFilter({ field, value });
+    },
+    [],
+  );
 
   const filteredCancellations = useMemo(() => {
     if (!searchFilter.value) return cancellations;
@@ -48,19 +59,29 @@ export default function SubscriptionCancel() {
     return cancellations.filter(cancellation => {
       const fieldValue = cancellation[searchFilter.field];
 
-      if (String(searchFilter.field).includes('Date')) {
-        return String(fieldValue).includes(searchFilter.value);
+      if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
+        if (!searchFilter.value.start && !searchFilter.value.end) {
+          return true;
+        }
+        const cancellationDate = new Date(fieldValue as string);
+        const startDate = searchFilter.value.start
+          ? new Date(searchFilter.value.start)
+          : new Date(0);
+        const endDate = searchFilter.value.end
+          ? new Date(searchFilter.value.end)
+          : new Date(8640000000000000);
+        return cancellationDate >= startDate && cancellationDate <= endDate;
+      } else if (typeof fieldValue === 'string' && typeof searchFilter.value === 'string') {
+        return fieldValue.toLowerCase().includes(searchFilter.value.toLowerCase());
       }
 
-      return String(fieldValue).toLowerCase().includes(searchFilter.value.toLowerCase());
+      return false;
     });
   }, [cancellations, searchFilter]);
 
   const handleRefund = (amount: number) => {
     if (!selectedCancellation) return;
-
     console.log('Refund amount:', amount, 'for user:', selectedCancellation.name);
-
     setIsModalOpen(false);
     setSelectedCancellation(null);
   };

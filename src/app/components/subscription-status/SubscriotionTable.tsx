@@ -1,6 +1,8 @@
 import { SortField, SortOrder, Subscriber } from '@/types/subscriber';
-import { ChevronDown, ChevronUp } from 'lucide-react';
-import React, { useState } from 'react';
+import { HeaderItem } from '@/types/tableHeader';
+import React, { useMemo, useState } from 'react';
+import SortableHeader from '../common/SortableHeader';
+import Pagination from '../common/Pagination';
 
 interface SubscriptionTableProps {
   subscribers: Subscriber[];
@@ -9,16 +11,22 @@ interface SubscriptionTableProps {
 export default function SubscriptionTable({ subscribers }: SubscriptionTableProps) {
   const [sortField, setSortField] = useState<SortField | null>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // 한 페이지에 나올 아이템 수
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortField(null);
+        setSortOrder('asc');
+      }
     } else {
       setSortField(field);
       setSortOrder('asc');
     }
   };
-
   const sortedSubscribers = [...subscribers].sort((a, b) => {
     if (!sortField) return 0;
 
@@ -32,166 +40,68 @@ export default function SubscriptionTable({ subscribers }: SubscriptionTableProp
     }
   });
 
+  const paginatedSubscribers = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedSubscribers.slice(startIndex, endIndex);
+  }, [sortedSubscribers, currentPage]);
+
+  const COMBINED_HEADERS: HeaderItem<SortField>[] = [
+    { field: 'name', label: '이름', type: 'sortable' },
+    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'phone', label: '전화번호', type: 'sortable' },
+    { field: undefined, label: '구독현황', type: 'static' },
+    { field: 'startDate', label: '최초결제일', type: 'sortable' },
+    { field: 'endDate', label: '최근결제일', type: 'sortable' },
+    { field: 'expiryDate', label: '구독만료일', type: 'sortable' },
+  ];
+
   return (
-    <table className="w-full">
-      <thead>
-        <tr className="border-y bg-[#F3F3F3]">
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('name')}
-          >
-            <div className="flex items-center justify-center pl-3">
-              이름
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
+    <div className="overflow-x-auto">
+      <table className="w-full whitespace-nowrap">
+        <thead>
+          <tr className="border-y bg-[#F3F3F3]">
+            {COMBINED_HEADERS.map((header, index) =>
+              header.type === 'sortable' && header.field ? (
+                <SortableHeader<SortField>
+                  key={header.field}
+                  field={header.field}
+                  label={header.label}
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
                 />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('email')}
-          >
-            <div className="flex items-center justify-center">
-              이메일주소(아이디)
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('phone')}
-          >
-            <div className="flex items-center justify-center">
-              전화번호
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="px-3 py-4 text-[1.5rem] text-center">구독현황</th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('startDate')}
-          >
-            <div className="flex items-center justify-center">
-              최초결제일
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'startDate' && sortOrder === 'asc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'startDate' && sortOrder === 'desc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('endDate')}
-          >
-            <div className="flex items-center justify-center">
-              최근결제일
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'endDate' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'endDate' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('expiryDate')}
-          >
-            <div className="flex items-center justify-center">
-              구독만료일
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'expiryDate' && sortOrder === 'asc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'expiryDate' && sortOrder === 'desc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {sortedSubscribers.map((subscriber, index) => (
-          <tr key={index} className="border-b">
-            <td className="py-4 text-[1.5rem] text-center">{subscriber.name}</td>
-            <td className="py-4 text-[1.5rem] text-center">{subscriber.email}</td>
-            <td className="py-4 text-[1.5rem] text-center">{subscriber.phone}</td>
-            <td className="py-4 text-[1.5rem] text-center">{subscriber.status}</td>
-            <td className="py-4 text-[1.5rem] text-center">{subscriber.startDate}</td>
-            <td className="py-4 text-[1.5rem] text-center">{subscriber.endDate}</td>
-            <td className="py-4 text-[1.5rem] text-center">{subscriber.expiryDate}</td>
+              ) : (
+                <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
+                  {header.label}
+                </th>
+              ),
+            )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {paginatedSubscribers.map((subscriber, index) => (
+            <tr key={index} className="border-b">
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.name}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.email}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.phone}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.status}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.startDate}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.endDate}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.expiryDate}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {subscribers.length > itemsPerPage && (
+        <Pagination
+          totalItems={subscribers.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
+      )}
+    </div>
   );
 }

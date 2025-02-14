@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { Poppins } from 'next/font/google';
-import ConditionalSidebar from './components/ConditionalSidebar';
+import ConditionalSidebar from './components/common/ConditionalSidebar';
 import './globals.css';
 
 const poppins = Poppins({

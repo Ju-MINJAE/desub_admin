@@ -1,6 +1,8 @@
 import { Cancellation } from '@/types/cancellation';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { HeaderItem } from '@/types/tableHeader';
 import { useMemo, useState } from 'react';
+import SortableHeader from '../common/SortableHeader';
+import Pagination from '../common/Pagination';
 
 interface CancellationTableProps {
   cancellations: Cancellation[];
@@ -10,12 +12,17 @@ interface CancellationTableProps {
 export default function CancellationTable({ cancellations, onRefund }: CancellationTableProps) {
   const [sortField, setSortField] = useState<keyof Cancellation | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10; // 한 페이지에 나올 아이템 수
 
   const handleSort = (field: keyof Cancellation) => {
-    if (field === 'cancelReason' || field === 'refundStatus') return;
-
     if (sortField === field) {
-      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+      if (sortOrder === 'asc') {
+        setSortOrder('desc');
+      } else if (sortOrder === 'desc') {
+        setSortField(null);
+        setSortOrder('asc');
+      }
     } else {
       setSortField(field);
       setSortOrder('asc');
@@ -37,125 +44,73 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
     });
   }, [cancellations, sortField, sortOrder]);
 
+  const paginatedCancellations = useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return sortedCancellations.slice(startIndex, endIndex);
+  }, [sortedCancellations, currentPage]);
+
+  const COMBINED_HEADERS: HeaderItem<keyof Cancellation>[] = [
+    { field: 'name', label: '이름', type: 'sortable' },
+    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'phone', label: '전화번호', type: 'sortable' },
+    { field: 'cancelDate', label: '취소일자', type: 'sortable' },
+    { field: undefined, label: '취소사유', type: 'static' },
+    { field: undefined, label: '환불처리', type: 'static' },
+  ];
+
   return (
-    <table className="w-full">
-      <thead>
-        <tr className="border-y bg-[#F3F3F3]">
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('name')}
-          >
-            <div className="flex items-center justify-center pl-3">
-              이름
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
+    <div className="overflow-x-auto">
+      <table className="w-full whitespace-nowrap">
+        <thead>
+          <tr className="border-y bg-[#F3F3F3]">
+            {COMBINED_HEADERS.map((header, index) =>
+              header.type === 'sortable' && header.field ? (
+                <SortableHeader<keyof Cancellation>
+                  key={header.field}
+                  field={header.field}
+                  label={header.label}
+                  sortField={sortField}
+                  sortOrder={sortOrder}
+                  onSort={handleSort}
                 />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'name' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('email')}
-          >
-            <div className="flex items-center justify-center">
-              이메일주소(아이디)
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'email' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('phone')}
-          >
-            <div className="flex items-center justify-center">
-              전화번호
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'asc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'phone' && sortOrder === 'desc' ? 'text-black' : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th
-            className="px-3 py-4 text-[1.5rem] text-center cursor-pointer"
-            onClick={() => handleSort('cancelDate')}
-          >
-            <div className="flex items-center justify-center">
-              취소일자
-              <span className="inline-flex flex-col ml-2">
-                <ChevronUp
-                  size={14}
-                  className={
-                    sortField === 'cancelDate' && sortOrder === 'asc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-                <ChevronDown
-                  size={14}
-                  className={
-                    sortField === 'cancelDate' && sortOrder === 'desc'
-                      ? 'text-black'
-                      : 'text-gray-300'
-                  }
-                />
-              </span>
-            </div>
-          </th>
-          <th className="px-3 py-4 text-[1.5rem] text-center">취소사유</th>
-          <th className="px-3 py-4 text-[1.5rem] text-center">환불처리</th>
-        </tr>
-      </thead>
-      <tbody>
-        {sortedCancellations.map((cancellation, index) => (
-          <tr key={index} className="border-b">
-            <td className="py-2 text-[1.5rem] text-center">{cancellation.name}</td>
-            <td className="py-2 text-[1.5rem] text-center">{cancellation.email}</td>
-            <td className="py-2 text-[1.5rem] text-center">{cancellation.phone}</td>
-            <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelDate}</td>
-            <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelReason}</td>
-            <td className="py-2 text-[1.5rem] text-center">
-              <button
-                onClick={() => onRefund(cancellation)}
-                className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
-              >
-                환불
-              </button>
-            </td>
+              ) : (
+                <th key={index} className="px-3 py-4 text-[1.5rem] text-center">
+                  {header.label}
+                </th>
+              ),
+            )}
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {paginatedCancellations.map((cancellation, index) => (
+            <tr key={index} className="border-b">
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.name}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.email}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.phone}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelDate}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelReason}</td>
+              <td className="py-2 text-[1.5rem] text-center">
+                <button
+                  onClick={() => onRefund(cancellation)}
+                  className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
+                >
+                  환불
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {cancellations.length > itemsPerPage && (
+        <Pagination
+          totalItems={cancellations.length}
+          itemsPerPage={itemsPerPage}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+        />
+      )}
+    </div>
   );
 }

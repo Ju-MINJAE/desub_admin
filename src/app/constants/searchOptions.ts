@@ -1,8 +1,10 @@
+import { Admin } from '@/types/admin';
 import { Cancellation } from '@/types/cancellation';
 import { Customer, Withdrawal } from '@/types/customer';
 import { Review } from '@/types/review';
 import { Sale } from '@/types/sales';
-import { SearchOption, Subscriber } from '@/types/subscriber';
+import { SearchOption } from '@/types/search';
+import { Subscriber } from '@/types/subscriber';
 
 export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
   { value: 'name', label: '이름', inputType: 'text' },
@@ -119,4 +121,20 @@ export const withdrawalSearchOptions: SearchOption<Withdrawal>[] = [
   { value: 'name', label: '이름', inputType: 'text' },
   { value: 'email', label: '이메일', inputType: 'text' },
   { value: 'phone', label: '전화번호', inputType: 'text' },
+];
+
+export const adminSearchOptions: SearchOption<Admin>[] = [
+  {
+    value: 'role',
+    label: '분류',
+    inputType: 'select',
+    options: [
+      { value: 'Master', label: 'Master' },
+      { value: 'Admin', label: 'Admin' },
+    ],
+  },
+  { value: 'name', label: '이름', inputType: 'text' },
+  { value: 'email', label: '이메일', inputType: 'text' },
+  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'createdAt', label: '계정 생성일', inputType: 'date' },
 ];
