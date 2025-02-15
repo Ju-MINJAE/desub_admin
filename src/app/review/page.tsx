@@ -1,12 +1,14 @@
 'use client';
 
 import { useCallback, useMemo, useState } from 'react';
-import { Review } from '@/types/review';
+import type { Review } from '@/types/review';
 import ReviewTable from '../components/review/ReviewTable';
 import Search from '../components/common/Search';
 import { reviewSearchOptions } from '../constants/searchOptions';
 import ReviewModal from '../components/review/ReviewModal';
 import ExportExcelButton from '../components/common/ExportExcelButton';
+
+type SearchValue = string | { start: string | undefined; end: string | undefined };
 
 const ReviewPage = () => {
   const [reviews, _] = useState<Review[]>([
@@ -26,7 +28,10 @@ const ReviewPage = () => {
     },
   ]);
 
-  const [searchFilter, setSearchFilter] = useState({
+  const [searchFilter, setSearchFilter] = useState<{
+    field: keyof Review;
+    value: SearchValue;
+  }>({
     field: '' as keyof Review,
     value: '',
   });
@@ -34,7 +39,7 @@ const ReviewPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
-  const handleSearch = useCallback((field: keyof Review, value: string) => {
+  const handleSearch = useCallback((field: keyof Review, value: SearchValue) => {
     setSearchFilter({ field, value });
   }, []);
 
@@ -50,11 +55,22 @@ const ReviewPage = () => {
       filtered = filtered.filter(review => {
         const fieldValue = review[searchFilter.field];
 
-        if (String(searchFilter.field).includes('Date')) {
-          return String(fieldValue).includes(searchFilter.value);
-        }
+        if (typeof searchFilter.value === 'object') {
+          const date = new Date(String(fieldValue));
+          const start = searchFilter.value.start ? new Date(searchFilter.value.start) : null;
+          const end = searchFilter.value.end ? new Date(searchFilter.value.end) : null;
 
-        return String(fieldValue).toLowerCase().includes(searchFilter.value.toLowerCase());
+          if (start && end) {
+            return date >= start && date <= end;
+          } else if (start) {
+            return date >= start;
+          } else if (end) {
+            return date <= end;
+          }
+          return true;
+        } else {
+          return String(fieldValue).toLowerCase().includes(searchFilter.value.toLowerCase());
+        }
       });
     }
 
