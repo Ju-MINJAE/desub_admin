@@ -5,7 +5,6 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Input } from '../components/ui/Input';
 import { Button } from '../components/ui/Button';
-import { loginAdmin } from '@/api/admin';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -20,12 +19,20 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const data = await loginAdmin(email, password);
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-      localStorage.setItem('access_token', data.access_token);
-      localStorage.setItem('refresh_token', data.refresh_token);
-
-      router.push('/dashboard');
+      if (response.ok) {
+        router.push('/dashboard');
+      } else {
+        const data = await response.json();
+        throw new Error(data.message || '로그인에 실패했습니다');
+      }
     } catch (err) {
       console.error('Login error:', err);
       setError('로그인에 실패했습니다. 이메일과 비밀번호를 확인해주세요.');
