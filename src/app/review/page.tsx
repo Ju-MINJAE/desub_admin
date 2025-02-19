@@ -7,7 +7,7 @@ import Search from '../components/common/Search';
 import { reviewSearchOptions } from '../constants/searchOptions';
 import ReviewModal from '../components/review/ReviewModal';
 import ExportExcelButton from '../components/common/ExportExcelButton';
-import { getAdminToken } from '@/actions/auth/getAdminToken';
+import { getAccessToken } from '@/actions/auth/getAccessToken';
 const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const ReviewPage = () => {
@@ -25,7 +25,7 @@ const ReviewPage = () => {
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
   const fetchReviews = async () => {
-    const { accessToken } = await getAdminToken();
+    const { accessToken } = await getAccessToken();
     setIsLoading(true);
     try {
       console.log('accessToken:', accessToken);
@@ -90,7 +90,7 @@ const ReviewPage = () => {
         <h1 className="text-[3.5rem] mt-[2.1rem] font-bold">리뷰관리</h1>
 
         <div className="mt-[1.8rem]">
-          <p className="text-[1.8rem]">신규리뷰 : 00개</p>
+          <p className="text-[1.8rem]">신규리뷰 : {newReviewCount}개</p>
         </div>
 
         <div className="flex justify-between items-center mt-[4.9rem]">
