@@ -7,7 +7,8 @@ import Search from '../components/common/Search';
 import { reviewSearchOptions } from '../constants/searchOptions';
 import ReviewModal from '../components/review/ReviewModal';
 import ExportExcelButton from '../components/common/ExportExcelButton';
-const BASEURL = process.env.NEXT_PUBLIC_BASE_URL;
+import { getAdminToken } from '@/actions/auth/getAdminToken';
+const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const ReviewPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -24,18 +25,22 @@ const ReviewPage = () => {
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
   const fetchReviews = async () => {
+    const { accessToken } = await getAdminToken();
+    setIsLoading(true);
     try {
-      setIsLoading(true);
-      setError(null);
+      console.log('accessToken:', accessToken);
+      const response = await fetch(`${BASEURL}/api/review/`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/review`);
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
+      if (!response.ok) throw new Error(`error status: ${response.status}`);
       const data = await response.json();
-      setReviews(data.reviews);
+      setReviews(data);
       setNewReviewCount(data.newReviewCount || 0);
     } catch (err) {
       setError('리뷰를 불러오는 중 오류가 발생했습니다.');
