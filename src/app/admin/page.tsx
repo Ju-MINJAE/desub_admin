@@ -101,13 +101,13 @@ export default function AdminManagement() {
   return (
     <div className="pl-[28.5rem]">
       <div className="p-[3.1rem]">
-        <div className="flex justify-between items-center">
-          <h1 className="text-[3.5rem] mt-[2.1rem] font-bold">계정관리</h1>
+        <div className="flex justify-between mt-[2.1rem] items-center">
+          <h1 className="text-[3.5rem] font-bold">계정관리</h1>
           <button
             onClick={() => setIsFormView(true)}
             className="flex items-center bg-black text-white px-[2rem] py-[1rem] rounded-[1.2rem]"
           >
-            <span>Admin 계정생성</span>
+            Admin 계정생성
           </button>
         </div>
 
