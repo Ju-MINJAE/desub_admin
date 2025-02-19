@@ -36,17 +36,23 @@ export default function AdminForm({ onCancel }: AdminFormProps) {
         headers: {
           'Content-Type': 'application/json',
           authorization: `Bearer ${accessToken}`,
+          accept: 'application/json',
         },
         body: JSON.stringify(data),
       });
-
+      const errorData = await response.json();
       if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.type === 'duplicate_email') {
-          setError('email', { message: '이미 사용 중인 이메일입니다' });
-          return;
+        if (Array.isArray(errorData.email)) {
+          setError('email', {
+            message: '이미 사용 중인 이메일입니다.',
+          });
         }
-        throw new Error(errorData.message || '계정 생성에 실패했습니다');
+        if (Array.isArray(errorData.phone)) {
+          setError('phone', {
+            message: '이미 사용 중인 전화번호입니다.',
+          });
+        }
+        throw new Error('계정 생성에 실패했습니다');
       }
 
       onCancel();
@@ -68,7 +74,6 @@ export default function AdminForm({ onCancel }: AdminFormProps) {
               type="button"
               onClick={onCancel}
               className="px-[3rem] py-[1.2rem] border border-black rounded-[1.8rem]"
-              disabled={isLoading}
             >
               취소
             </button>
@@ -76,9 +81,8 @@ export default function AdminForm({ onCancel }: AdminFormProps) {
               type="submit"
               form="admin-form"
               className="px-[3rem] py-[1.2rem] bg-black text-white rounded-[1.8rem]"
-              disabled={isLoading}
             >
-              {isLoading ? '처리중...' : '등록'}
+              등록
             </button>
           </div>
         </div>
