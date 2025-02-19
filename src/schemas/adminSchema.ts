@@ -37,3 +37,18 @@ export const passwordChangeSchema = z.object({
       return true;
     }),
 });
+
+export const adminFormSchema = z.object({
+  email: z.string().email('아이디 형식이 올바르지 않습니다.'),
+  password: z
+    .string()
+    .min(10, '비밀번호는 최소 10자 이상이어야 합니다.')
+    .regex(/[A-Z]/, '영문 대문자를 포함해야 합니다.')
+    .regex(/[a-z]/, '영문 소문자를 포함해야 합니다.')
+    .regex(/\d/, '숫자를 포함해야 합니다.')
+    .regex(/[!@#$%^&*(),.?":{}|<>]/, '특수문자를 포함해야 합니다.'),
+  name: z.string().min(1, '이름을 입력해주세요.'),
+  phone: z
+    .string()
+    .regex(/^\d{3}-\d{4}-\d{4}$/, '올바른 전화번호 형식이 아닙니다. (예: 010-1234-5678)'),
+});

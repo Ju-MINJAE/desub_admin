@@ -7,10 +7,3 @@ export interface Admin {
   passwordChangedAt: string;
   status: boolean | '-';
 }
-
-export interface AdminFormData {
-  id: string;
-  password: string;
-  name: string;
-  phone: string;
-}
