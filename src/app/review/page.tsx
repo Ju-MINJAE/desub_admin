@@ -1,37 +1,22 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
-import type { Review } from '@/types/review';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Review } from '@/types/review';
 import ReviewTable from '../components/review/ReviewTable';
 import Search from '../components/common/Search';
 import { reviewSearchOptions } from '../constants/searchOptions';
 import ReviewModal from '../components/review/ReviewModal';
 import ExportExcelButton from '../components/common/ExportExcelButton';
-
-type SearchValue = string | { start: string | undefined; end: string | undefined };
+import { getAccessToken } from '@/actions/auth/getAccessToken';
+const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const ReviewPage = () => {
-  const [reviews, _] = useState<Review[]>([
-    {
-      name: '홍길동',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5678',
-      reviewRating: '5',
-      reviewContent: '입력한 리뷰내용',
-    },
-    {
-      name: '김남규',
-      email: 'asdasd@gmail.com',
-      phone: '010-4444-5679',
-      reviewRating: '4',
-      reviewContent: '리뷰내용 ~~~~',
-    },
-  ]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [newReviewCount, setNewReviewCount] = useState(0);
 
-  const [searchFilter, setSearchFilter] = useState<{
-    field: keyof Review;
-    value: SearchValue;
-  }>({
+  const [searchFilter, setSearchFilter] = useState({
     field: '' as keyof Review,
     value: '',
   });
@@ -39,9 +24,47 @@ const ReviewPage = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
-  const handleSearch = useCallback((field: keyof Review, value: SearchValue) => {
-    setSearchFilter({ field, value });
+  const fetchReviews = async () => {
+    const { accessToken } = await getAccessToken();
+    setIsLoading(true);
+    try {
+      console.log('accessToken:', accessToken);
+      const response = await fetch(`${BASEURL}/api/review/`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) throw new Error(`error status: ${response.status}`);
+      const data = await response.json();
+      setReviews(data);
+      setNewReviewCount(data.newReviewCount || 0);
+    } catch (err) {
+      setError('리뷰를 불러오는 중 오류가 발생했습니다.');
+      console.error('Error fetching reviews:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchReviews();
   }, []);
+
+  const handleSearch = useCallback(
+    (
+      field: keyof Review,
+      value: string | { start: string | undefined; end: string | undefined },
+    ) => {
+      if (typeof value === 'string') {
+        setSearchFilter({ field, value });
+      }
+    },
+    [],
+  );
 
   const handleReviewSelect = useCallback((review: Review) => {
     setSelectedReview(review);
@@ -54,23 +77,7 @@ const ReviewPage = () => {
     if (searchFilter.value) {
       filtered = filtered.filter(review => {
         const fieldValue = review[searchFilter.field];
-
-        if (typeof searchFilter.value === 'object') {
-          const date = new Date(String(fieldValue));
-          const start = searchFilter.value.start ? new Date(searchFilter.value.start) : null;
-          const end = searchFilter.value.end ? new Date(searchFilter.value.end) : null;
-
-          if (start && end) {
-            return date >= start && date <= end;
-          } else if (start) {
-            return date >= start;
-          } else if (end) {
-            return date <= end;
-          }
-          return true;
-        } else {
-          return String(fieldValue).toLowerCase().includes(searchFilter.value.toLowerCase());
-        }
+        return String(fieldValue).toLowerCase().includes(String(searchFilter.value).toLowerCase());
       });
     }
 
@@ -83,7 +90,7 @@ const ReviewPage = () => {
         <h1 className="text-[3.5rem] mt-[2.1rem] font-bold">리뷰관리</h1>
 
         <div className="mt-[1.8rem]">
-          <p className="text-[1.8rem]">신규리뷰 : 00개</p>
+          <p className="text-[1.8rem]">신규리뷰 : {newReviewCount}개</p>
         </div>
 
         <div className="flex justify-between items-center mt-[4.9rem]">
