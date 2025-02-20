@@ -2,7 +2,7 @@ export interface Product {
   id: number;
   plan_name: string;
   price: number;
-  period: string;
+  period: 'monthly' | 'yearly';
   is_active?: boolean;
 }
 

@@ -41,6 +41,7 @@ const ReviewPage = () => {
       if (!response.ok) throw new Error(`error status: ${response.status}`);
       const data = await response.json();
       setReviews(data);
+      console.log('data:', data);
       setNewReviewCount(data.newReviewCount || 0);
     } catch (err) {
       setError('리뷰를 불러오는 중 오류가 발생했습니다.');

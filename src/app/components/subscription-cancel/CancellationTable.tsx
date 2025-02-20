@@ -93,7 +93,7 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
               <td className="py-2 text-[1.5rem] text-center">
                 <button
                   onClick={() => onRefund(cancellation)}
-                  className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
+                  className="w-[7rem] py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
                 >
                   환불
                 </button>

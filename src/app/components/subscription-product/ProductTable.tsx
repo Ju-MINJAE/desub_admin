@@ -88,24 +88,24 @@ export default function ProductTable({
         <tbody>
           {paginatedProducts.map((product, index) => (
             <tr key={product.id} className="border-b">
-              <td className="py-4 text-[1.5rem] text-center">{paginatedProducts.length - index}</td>
-              <td className="py-4 text-[1.5rem] text-center">{product.plan_name}</td>
-              <td className="py-4 text-[1.5rem] text-center">{product.price.toLocaleString()}원</td>
-              <td className="py-4 text-[1.5rem] text-center">{product.period}</td>
-              <td className="py-4 text-[1.5rem] text-center">
+              <td className="py-2 text-[1.5rem] text-center">{paginatedProducts.length - index}</td>
+              <td className="py-2 text-[1.5rem] text-center">{product.plan_name}</td>
+              <td className="py-2 text-[1.5rem] text-center">{product.price.toLocaleString()}원</td>
+              <td className="py-2 text-[1.5rem] text-center">{product.period}</td>
+              <td className="py-2 text-[1.5rem] text-center">
                 <button
                   onClick={() => onSelectMainProduct?.(product)}
-                  className={`px-[2rem] py-[0.8rem] rounded-[0.8rem] ${
+                  className={`w-[7rem] py-2 text-[1.5rem] rounded-[1.2rem] ${
                     product.is_active ? 'bg-black text-white' : 'border border-black'
                   }`}
                 >
                   {product.is_active ? '선택됨' : '선택'}
                 </button>
               </td>
-              <td className="py-4 text-[1.5rem] text-center">
+              <td className="py-2 text-[1.5rem] text-center">
                 <button
                   onClick={() => onDelete?.(product)}
-                  className="px-[2rem] py-[0.8rem] border border-black rounded-[0.8rem]"
+                  className="w-[7rem] py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
                 >
                   삭제
                 </button>
