@@ -50,10 +50,10 @@ export default function ReviewTable({ reviews, onReviewSelect }: ReviewTableProp
   }, [sortedReviews, currentPage]);
 
   const COMBINED_HEADERS: HeaderItem<ReviewSortField>[] = [
-    { field: 'name', label: '이름', type: 'sortable' },
-    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
-    { field: 'phone', label: '전화번호', type: 'sortable' },
-    { field: 'reviewRating', label: '별점', type: 'sortable' },
+    { field: 'user.username', label: '이름', type: 'sortable' },
+    { field: 'user.email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'user.phone', label: '전화번호', type: 'sortable' },
+    { field: 'rating', label: '별점', type: 'sortable' },
     { field: undefined, label: '리뷰내용', type: 'static' },
   ];
 
@@ -83,10 +83,10 @@ export default function ReviewTable({ reviews, onReviewSelect }: ReviewTableProp
         <tbody>
           {paginatedReviews.map((review, index) => (
             <tr key={index} className="border-b">
-              <td className="py-4 text-[1.5rem] text-center">{review.name}</td>
-              <td className="py-4 text-[1.5rem] text-center">{review.email}</td>
-              <td className="py-4 text-[1.5rem] text-center">{review.phone}</td>
-              <td className="py-4 text-[1.5rem] text-center">{review.reviewRating}</td>
+              <td className="py-4 text-[1.5rem] text-center">{review.user.username}</td>
+              <td className="py-4 text-[1.5rem] text-center">{review.user.email}</td>
+              <td className="py-4 text-[1.5rem] text-center">{review.user.phone}</td>
+              <td className="py-4 text-[1.5rem] text-center">{review.rating}</td>
               <td
                 className="py-4 text-[1.5rem] text-center cursor-pointer underline"
                 onClick={() => onReviewSelect(review)}

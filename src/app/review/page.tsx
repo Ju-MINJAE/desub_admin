@@ -39,7 +39,9 @@ const ReviewPage = () => {
       });
 
       if (!response.ok) throw new Error(`error status: ${response.status}`);
+
       const data = await response.json();
+
       setReviews(data);
       console.log('data:', data);
       setNewReviewCount(data.newReviewCount || 0);
@@ -96,14 +98,21 @@ const ReviewPage = () => {
 
         <div className="flex justify-between items-center mt-[4.9rem]">
           <ExportExcelButton<Review>
-            data={filteredReviews}
+            data={filteredReviews.map(review => ({
+              id: review.id,
+              content: review.content,
+              rating: review.rating,
+              user: review.user,
+              createdAt: review.createdAt,
+              subs: review.subs,
+            }))}
             fileName="리뷰_목록"
             headers={{
-              name: '이름',
-              email: '이메일',
-              phone: '전화번호',
-              reviewRating: '별점',
-              reviewContent: '상세보기',
+              'user.username': '이름',
+              'user.email': '이메일',
+              'user.phone': '전화번호',
+              rating: '별점',
+              content: '상세보기',
             }}
           />
           <Search<Review> onSearch={handleSearch} searchOptions={reviewSearchOptions} />
@@ -121,10 +130,10 @@ const ReviewPage = () => {
               setIsModalOpen(false);
               setSelectedReview(null);
             }}
-            customerName={selectedReview.name}
-            customerEmail={selectedReview.email}
-            customerRating={selectedReview.reviewRating}
-            customerContent={selectedReview.reviewContent}
+            customerName={selectedReview.user.username}
+            customerEmail={selectedReview.user.email}
+            customerRating={selectedReview.rating}
+            customerContent={selectedReview.content}
           />
         )}
       </div>
