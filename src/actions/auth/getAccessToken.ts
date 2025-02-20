@@ -11,6 +11,12 @@ export async function getAccessToken() {
     if (!accessToken && refreshToken) {
       const newAccessToken = await refreshAccessToken(refreshToken);
       if (newAccessToken) {
+        cookies().set('access_token', newAccessToken, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV === 'production',
+          sameSite: 'lax',
+          maxAge: 30 * 60,
+        });
         accessToken = newAccessToken;
       }
     }
