@@ -26,7 +26,14 @@ const Sidebar = () => {
         >
           대시보드
         </Link>
-
+        <Link
+          href="/subscription-product"
+          className={`rounded px-[1.7rem] py-[0.8rem] ${
+            pathname === '/subscription-product' ? 'bg-[#F3F3F3] font-bold' : ''
+          }`}
+        >
+          구독상품관리
+        </Link>
         <Link
           href="/subscription-status"
           className={`rounded px-[1.7rem] py-[0.8rem] ${
