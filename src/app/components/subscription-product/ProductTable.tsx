@@ -7,13 +7,13 @@ import { Product, ProductSortField } from '@/types/product';
 interface ProductTableProps {
   products: Product[];
   onSelectMainProduct?: (product: Product) => void;
-  onDelete?: (product: Product) => void;
+  onDeleteClick?: (product: Product) => void;
 }
 
 export default function ProductTable({
   products,
   onSelectMainProduct,
-  onDelete,
+  onDeleteClick,
 }: ProductTableProps) {
   const [sortField, setSortField] = useState<ProductSortField | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
@@ -106,7 +106,7 @@ export default function ProductTable({
               </td>
               <td className="py-2 text-[1.5rem] text-center">
                 <button
-                  onClick={() => onDelete?.(product)}
+                  onClick={() => onDeleteClick?.(product)}
                   className="w-[7rem] py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
                 >
                   삭제
