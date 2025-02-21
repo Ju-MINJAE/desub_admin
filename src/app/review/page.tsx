@@ -14,7 +14,6 @@ const ReviewPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [newReviewCount, setNewReviewCount] = useState(0);
 
   const [searchFilter, setSearchFilter] = useState({
     field: '' as keyof Review,
@@ -43,8 +42,6 @@ const ReviewPage = () => {
       const data = await response.json();
 
       setReviews(data);
-      console.log('data:', data);
-      setNewReviewCount(data.newReviewCount || 0);
     } catch (err) {
       setError('리뷰를 불러오는 중 오류가 발생했습니다.');
       console.error('Error fetching reviews:', err);
@@ -93,7 +90,7 @@ const ReviewPage = () => {
         <h1 className="text-[3.5rem] mt-[2.1rem] font-bold">리뷰관리</h1>
 
         <div className="mt-[1.8rem]">
-          <p className="text-[1.8rem]">신규리뷰 : {newReviewCount}개</p>
+          <p className="text-[1.8rem]">신규리뷰 : {filteredReviews.length}개</p>
         </div>
 
         <div className="flex justify-between items-center mt-[4.9rem]">

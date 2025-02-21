@@ -1,5 +1,5 @@
 export interface Product {
-  id: number;
+  id?: number;
   plan_name: string;
   price: number;
   period: 'monthly' | 'yearly';

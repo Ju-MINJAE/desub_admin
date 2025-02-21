@@ -88,7 +88,9 @@ export default function ProductTable({
         <tbody>
           {paginatedProducts.map((product, index) => (
             <tr key={product.id} className="border-b">
-              <td className="py-2 text-[1.5rem] text-center">{paginatedProducts.length - index}</td>
+              <td className="py-2 text-[1.5rem] text-center">
+                {(currentPage - 1) * itemsPerPage + index + 1}
+              </td>
               <td className="py-2 text-[1.5rem] text-center">{product.plan_name}</td>
               <td className="py-2 text-[1.5rem] text-center">{product.price.toLocaleString()}원</td>
               <td className="py-2 text-[1.5rem] text-center">{product.period}</td>

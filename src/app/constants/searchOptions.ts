@@ -51,11 +51,11 @@ export const subscriberSearchOptions: SearchOption<Subscriber>[] = [
 ];
 
 export const reviewSearchOptions: SearchOption<Review>[] = [
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'user.username', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
   {
-    value: 'reviewRating',
+    value: 'rating',
     label: '별점',
     inputType: 'select',
     options: [
