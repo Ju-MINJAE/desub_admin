@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react';
 import ProductTable from '../components/subscription-product/ProductTable';
 import { getAccessToken } from '@/actions/auth/getAccessToken';
 import ProductModal from '../components/subscription-product/ProductModal';
+import ProductDeleteModal from '../components/subscription-product/ProductDeleteModal';
 const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function ProductManagement() {
@@ -13,6 +14,8 @@ export default function ProductManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
 
   // 상품 목록을 불러오는 api 호출
   const fetchProducts = async () => {
@@ -82,7 +85,7 @@ export default function ProductManagement() {
   };
 
   // 상품을 삭제하는 api 호출
-  const handleDeleteProduct = async (product: Product) => {
+  const handleDeleteConfirm = async (product: Product) => {
     try {
       const { accessToken } = await getAccessToken();
       console.log('Deleting product:', product.id);
@@ -96,12 +99,11 @@ export default function ProductManagement() {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error('Error response:', errorData); // 에러 응답 확인
-        throw new Error(errorData.message || '상품 삭제에 실패했습니다');
+        throw new Error('상품 삭제에 실패했습니다');
       }
 
       fetchProducts();
+      setIsConfirmModalOpen(false);
     } catch (error) {
       console.error('Failed to delete product:', error);
       alert('상품 삭제에 실패했습니다');
@@ -110,6 +112,11 @@ export default function ProductManagement() {
 
   const handleOpenModal = () => {
     setIsModalOpen(true);
+  };
+
+  const handleDeleteClick = (product: Product) => {
+    setProductToDelete(product);
+    setIsConfirmModalOpen(true);
   };
 
   if (isLoading) {
@@ -154,13 +161,25 @@ export default function ProductManagement() {
         <ProductTable
           products={products}
           onSelectMainProduct={handleSelectMainProduct}
-          onDelete={handleDeleteProduct}
+          onDeleteClick={handleDeleteClick}
         />
         <ProductModal
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
             fetchProducts();
+          }}
+        />
+        <ProductDeleteModal
+          isOpen={isConfirmModalOpen}
+          onClose={() => {
+            setIsConfirmModalOpen(false);
+            setProductToDelete(null);
+          }}
+          onConfirm={async () => {
+            if (productToDelete) {
+              await handleDeleteConfirm(productToDelete);
+            }
           }}
         />
       </div>
