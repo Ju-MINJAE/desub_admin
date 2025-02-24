@@ -31,7 +31,7 @@ export default function AdminForm({ onCancel }: AdminFormProps) {
     try {
       const { accessToken } = await getAccessToken();
       setIsLoading(true);
-      const response = await fetch(`${BASEURL}/api/admin/create-admin/`, {
+      const response = await fetch(`${BASEURL}/api/admin/admin/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

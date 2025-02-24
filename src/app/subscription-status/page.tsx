@@ -25,7 +25,7 @@ export default function SubscriptionStatus() {
         throw new Error('인증이 필요합니다');
       }
 
-      const response = await fetch(`${BASEURL}/api/subscriptions/`, {
+      const response = await fetch(`${BASEURL}/api/admin/subscriptions/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -38,8 +38,8 @@ export default function SubscriptionStatus() {
       }
 
       const data = await response.json();
-      setSubscribers(data);
-      // console.log(data);
+      setSubscribers(data.requests);
+      console.log(data);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
@@ -133,9 +133,9 @@ export default function SubscriptionStatus() {
             data={filteredSubscribers}
             fileName="구독자_목록"
             headers={{
-              name: '이름',
-              email: '이메일',
-              phone: '전화번호',
+              'user.username': '이름',
+              'user.email': '이메일',
+              'user.phone': '전화번호',
               status: '구독현황',
               startDate: '최초결제일',
               endDate: '최근결제일',
