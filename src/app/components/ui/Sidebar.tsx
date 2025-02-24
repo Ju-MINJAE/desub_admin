@@ -15,6 +15,7 @@ const Sidebar = () => {
         width={140}
         height={33}
         className="ml-[3rem]"
+        priority
       />
       <h2 className="pt-[1.1rem] pl-[3.5rem] pb-[2.9rem] font-semibold text-[2.5rem]">Admin</h2>
       <div className="flex flex-col gap-[1.6rem] text-[1.8rem] px-[1.6rem]">

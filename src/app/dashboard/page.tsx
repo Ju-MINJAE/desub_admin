@@ -4,9 +4,9 @@ import Link from 'next/link';
 
 const Dashboard = () => {
   return (
-    <div className="flex min-h-screen pl-[36rem] pt-[11.9rem]">
+    <div className="flex min-h-screen pl-[30rem] xl:pl-[36rem] pt-[6rem] xl:pt-[11.9rem]">
       <div className="h-[84.5rem] overflow-auto">
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-[2.2rem] w-fit">
+        <div className="grid grid-cols-2 xl:grid-cols-3 gap-[2.2rem] w-fit">
           <div className="w-[33.9rem] h-[26.7rem] px-[2.9rem] py-[1.6rem]">
             <div className="flex items-center justify-between pb-[3rem]">
               <Heading tag="h1">구독현황</Heading>
