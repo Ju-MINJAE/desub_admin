@@ -15,7 +15,7 @@ export async function getAccessToken() {
           httpOnly: true,
           secure: process.env.NODE_ENV === 'production',
           sameSite: 'lax',
-          maxAge: 30 * 60,
+          maxAge: 5 * 60,
         });
         accessToken = newAccessToken;
       }

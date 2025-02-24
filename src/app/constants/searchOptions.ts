@@ -33,11 +33,11 @@ export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
 ];
 
 export const subscriberSearchOptions: SearchOption<Subscriber>[] = [
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
   {
-    value: 'status',
+    value: 'user.sub_status',
     label: '구독현황',
     inputType: 'select',
     options: [
@@ -45,9 +45,9 @@ export const subscriberSearchOptions: SearchOption<Subscriber>[] = [
       { value: '일시정지', label: '일시정지' },
     ],
   },
-  { value: 'startDate', label: '최초결제일', inputType: 'date' },
-  { value: 'endDate', label: '최근결제일', inputType: 'date' },
-  { value: 'expiryDate', label: '구독만료일', inputType: 'date' },
+  { value: 'first_payment_date', label: '최초결제일', inputType: 'date' },
+  { value: 'last_payment_date', label: '최근결제일', inputType: 'date' },
+  { value: 'expiry_date', label: '구독만료일', inputType: 'date' },
 ];
 
 export const reviewSearchOptions: SearchOption<Review>[] = [
