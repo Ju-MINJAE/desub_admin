@@ -40,7 +40,6 @@ export default function CustomerList() {
 
       const data = await response.json();
       setCustomers(data.users);
-      console.log(data);
       setDashboard(data.statistics);
     } catch (error) {
       console.error('Failed to fetch products:', error);
@@ -155,7 +154,7 @@ export default function CustomerList() {
             setIsModalOpen(false);
             setSelectedHistory(null);
           }}
-          customer={selectedHistory}
+          customerId={selectedHistory.id}
         />
       )}
     </div>

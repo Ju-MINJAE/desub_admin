@@ -39,9 +39,9 @@ const ReviewPage = () => {
 
       if (!response.ok) throw new Error(`error status: ${response.status}`);
 
-      const { dashboard, requests } = await response.json();
-      setReviews(requests);
-      setDashBoard(dashboard);
+      const data = await response.json();
+      setReviews(data.requests);
+      setDashBoard(data.dashboard);
     } catch (err) {
       console.error('Error fetching reviews:', err);
     }

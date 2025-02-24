@@ -41,9 +41,9 @@ export default function Sales() {
         throw new Error('상품 목록을 불러오는데 실패했습니다');
       }
 
-      const { dashboard, transactions } = await response.json();
-      setSales(transactions);
-      setDashBoard(dashboard);
+      const data = await response.json();
+      setSales(data.transactions);
+      setDashBoard(data.dashboard);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
