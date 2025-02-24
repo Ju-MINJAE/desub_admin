@@ -24,7 +24,7 @@ const Dashboard = () => {
                 <span className="font-bold text-[1.8rem]">0</span>
               </div>
               <div className="flex justify-between items-center">
-                <Heading tag="h2">오늘 구독 결사정지</Heading>
+                <Heading tag="h2">오늘 구독 일시정지</Heading>
                 <span className="font-bold text-[1.8rem]">3</span>
               </div>
             </div>

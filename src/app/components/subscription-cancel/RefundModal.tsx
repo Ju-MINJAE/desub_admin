@@ -1,6 +1,6 @@
-import { RefundModalProps } from "@/types/cancellation";
-import { X } from "lucide-react";
-import { useState } from "react";
+import { RefundModalProps } from '@/types/cancellation';
+import { X } from 'lucide-react';
+import { useState } from 'react';
 
 export default function RefundModal({
   isOpen,
@@ -38,11 +38,11 @@ export default function RefundModal({
             <span>{amount.toLocaleString()}</span>
           </div>
           <div className="flex items-center mb-[4.4rem]">
-            <label className="w-[16rem]">부분취소금액 입력</label>
+            <label className="w-[16rem]">취소금액 입력</label>
             <input
               type="number"
               value={refundAmount}
-              onChange={(e) => setRefundAmount(Number(e.target.value))}
+              onChange={e => setRefundAmount(Number(e.target.value))}
               className="w-[19rem] border p-2"
             />
           </div>
