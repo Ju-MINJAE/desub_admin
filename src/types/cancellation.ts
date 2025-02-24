@@ -1,18 +1,24 @@
 export interface Cancellation {
-  name: string;
-  email: string;
-  phone: string;
   paymentDate: string;
-  cancelDate: string;
-  cancelReason: string;
-  refundStatus: string;
+  cancelled_date: string;
+  cancelled_reason: string;
+  expected_refund_amount: string;
+  refund_amount?: string;
+  refund_date?: string;
+  refund_status: string;
+  subs_id: string;
+  user: {
+    email: string;
+    name: string;
+    phone: string;
+  };
 }
 
-export interface RefundModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  customerName: string;
-  paymentDate: string;
-  amount: number;
-  onRefund: (refundAmount: number) => void;
+export type CancellationSortField = 'cancelled_date' | 'user.name' | 'user.email' | 'user.phone';
+
+export interface RefundInfo {
+  paid_amount: string;
+  paid_at: string;
+  refund_amount: string;
+  user_name: string;
 }

@@ -41,13 +41,8 @@ export default function Sales() {
 
       const data = await response.json();
       setSales(data.transactions);
-      console.log(data.transactions);
-
-      if (data.dashboard) {
-        setMonthTotalSales(data.dashboard.monthly_sales);
-        setMonthCancelSales(data.dashboard.monthly_refunds);
-        console.log(data.dashboard);
-      }
+      setMonthTotalSales(data.dashboard.monthly_sales);
+      setMonthCancelSales(data.dashboard.monthly_refunds);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
