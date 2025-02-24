@@ -39,7 +39,7 @@ export default function SubscriptionStatus() {
 
       const data = await response.json();
       setSubscribers(data.requests);
-      console.log(data);
+      console.log(data.requests);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
@@ -87,8 +87,8 @@ export default function SubscriptionStatus() {
 
     if (statusFilters.inProgress || statusFilters.paused) {
       filtered = filtered.filter(subscriber => {
-        if (statusFilters.inProgress && subscriber.status === '진행중') return true;
-        if (statusFilters.paused && subscriber.status === '일시정지') return true;
+        if (statusFilters.inProgress && subscriber.user.sub_status === 'active') return true;
+        if (statusFilters.paused && subscriber.user.sub_status === 'pause') return true;
         return false;
       });
     }
@@ -133,13 +133,13 @@ export default function SubscriptionStatus() {
             data={filteredSubscribers}
             fileName="구독자_목록"
             headers={{
-              'user.username': '이름',
+              'user.name': '이름',
               'user.email': '이메일',
               'user.phone': '전화번호',
-              status: '구독현황',
-              startDate: '최초결제일',
-              endDate: '최근결제일',
-              expiryDate: '구독만료일',
+              'user.sub_status': '구독현황',
+              first_payment_date: '최초결제일',
+              last_payment_date: '최근결제일',
+              expiry_date: '구독만료일',
             }}
           />
           <Search<Subscriber> onSearch={handleSearch} searchOptions={subscriberSearchOptions} />
