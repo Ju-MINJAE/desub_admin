@@ -100,10 +100,10 @@ export const customerSearchOptions: SearchOption<Customer>[] = [
 ];
 
 export const saleSearchOptions: SearchOption<Sale>[] = [
-  { value: 'payDate', label: '결제일', inputType: 'date' },
-  { value: 'price', label: '금액', inputType: 'text' },
+  { value: 'transaction_date', label: '결제일', inputType: 'date' },
+  { value: 'transaction_amount', label: '금액', inputType: 'text' },
   {
-    value: 'content',
+    value: 'transaction_type',
     label: '내용',
     inputType: 'select',
     options: [
@@ -111,9 +111,9 @@ export const saleSearchOptions: SearchOption<Sale>[] = [
       { value: '구독취소', label: '구독취소' },
     ],
   },
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
 ];
 
 export const withdrawalSearchOptions: SearchOption<Withdrawal>[] = [

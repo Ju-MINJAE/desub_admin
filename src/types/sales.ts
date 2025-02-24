@@ -1,10 +1,13 @@
 export interface Sale {
-  payDate: string;
-  price: string;
-  content: string;
-  name: string;
-  email: string;
-  phone: string;
+  transaction_date: string;
+  transaction_amount: string;
+  transaction_type: string;
+  user: {
+    email: string;
+    name: string;
+    phone: string;
+    id?: string;
+  };
 }
 
 export interface SalesCountProps {
@@ -12,4 +15,10 @@ export interface SalesCountProps {
   monthCancelSales: number;
 }
 
-export type SaleSortField = 'payDate' | 'price' | 'content' | 'name' | 'email' | 'phone';
+export type SaleSortField =
+  | 'transaction_date'
+  | 'transaction_amount'
+  | 'transaction_type'
+  | 'user.name'
+  | 'user.email'
+  | 'user.phone';
