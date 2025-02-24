@@ -40,9 +40,9 @@ export default function SubscriptionStatus() {
         throw new Error('상품 목록을 불러오는데 실패했습니다');
       }
 
-      const { dashboard, requests } = await response.json();
-      setSubscribers(requests);
-      setDashBoard(dashboard);
+      const data = await response.json();
+      setSubscribers(data.requests);
+      setDashBoard(data.dashboard);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
