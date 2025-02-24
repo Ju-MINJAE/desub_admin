@@ -69,11 +69,11 @@ export const reviewSearchOptions: SearchOption<Review>[] = [
 ];
 
 export const customerSearchOptions: SearchOption<Customer>[] = [
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
   {
-    value: 'subscription',
+    value: 'is_subscribed',
     label: '구독여부',
     inputType: 'select',
     options: [
@@ -82,21 +82,22 @@ export const customerSearchOptions: SearchOption<Customer>[] = [
     ],
   },
   {
-    value: 'status',
+    value: 'sub_status',
     label: '구독현황',
     inputType: 'select',
     options: [
-      { value: '진행중', label: '진행중' },
-      { value: '일시정지', label: '일시정지' },
-      { value: '구독취소', label: '구독취소' },
-      { value: '-', label: '-' },
+      { value: 'active', label: '진행중' },
+      { value: 'paused', label: '일시정지' },
+      { value: 'cancelled', label: '구독취소' },
+      { value: 'refund_pending', label: '환불대기' },
+      { value: 'none', label: '-' },
     ],
   },
-  { value: 'signupDate', label: '가입일', inputType: 'date' },
-  { value: 'lastLoginDate', label: '마지막 방문일', inputType: 'date' },
-  { value: 'startDate', label: '최초결제일', inputType: 'date' },
-  { value: 'endDate', label: '최근결제일', inputType: 'date' },
-  { value: 'expiryDate', label: '구독만료일', inputType: 'date' },
+  { value: 'created_at', label: '가입일', inputType: 'date' },
+  { value: 'last_login', label: '마지막 방문일', inputType: 'date' },
+  { value: 'start_date', label: '최초결제일', inputType: 'date' },
+  { value: 'last_paid_at', label: '최근결제일', inputType: 'date' },
+  { value: 'end_date', label: '구독만료일', inputType: 'date' },
 ];
 
 export const saleSearchOptions: SearchOption<Sale>[] = [

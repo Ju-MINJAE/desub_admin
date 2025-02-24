@@ -12,8 +12,10 @@ const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 const ReviewPage = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [dashboard, setDashBoard] = useState({
+    new_reviews: 0,
+    reviews: 0,
+  });
 
   const [searchFilter, setSearchFilter] = useState({
     field: '' as keyof Review | `user.${string}`,
@@ -25,7 +27,6 @@ const ReviewPage = () => {
 
   const fetchReviews = async () => {
     const { accessToken } = await getAccessToken();
-    setIsLoading(true);
     try {
       const response = await fetch(`${BASEURL}/api/review/`, {
         method: 'GET',
@@ -38,14 +39,11 @@ const ReviewPage = () => {
 
       if (!response.ok) throw new Error(`error status: ${response.status}`);
 
-      const data = await response.json();
-
-      setReviews(data.requests);
+      const { dashboard, requests } = await response.json();
+      setReviews(requests);
+      setDashBoard(dashboard);
     } catch (err) {
-      setError('리뷰를 불러오는 중 오류가 발생했습니다.');
       console.error('Error fetching reviews:', err);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -96,7 +94,9 @@ const ReviewPage = () => {
         <h1 className="text-[3.5rem] mt-[2.1rem] font-bold">리뷰관리</h1>
 
         <div className="mt-[1.8rem]">
-          <p className="text-[1.8rem]">신규리뷰 : {filteredReviews.length}개</p>
+          <p className="text-[1.8rem]">
+            전체 리뷰 : {dashboard.reviews}개 | 신규 리뷰 : {dashboard.new_reviews}개
+          </p>
         </div>
 
         <div className="flex justify-between items-center mt-[4.9rem]">
