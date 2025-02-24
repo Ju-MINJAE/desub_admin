@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Subscriber } from '@/types/subscriber';
 import SubscriberCount from '../components/subscription-status/SubscriberCount';
 import SubscriptionTable from '../components/subscription-status/SubscriotionTable';
@@ -8,28 +8,49 @@ import Search from '../components/common/Search';
 import { subscriberSearchOptions } from '../constants/searchOptions';
 import { Heading } from '../components/ui/Heading';
 import ExportExcelButton from '../components/common/ExportExcelButton';
+import { getAccessToken } from '@/actions/auth/getAccessToken';
+const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function SubscriptionStatus() {
-  const [subscribers, setSubscribers] = useState<Subscriber[]>([
-    {
-      name: '홍길동',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5678',
-      status: '진행중',
-      startDate: '2025-01-12',
-      endDate: '2025-01-13',
-      expiryDate: '2025-02-13',
-    },
-    {
-      name: '홍길똥',
-      email: 'gilddong.hong@gmail.com',
-      phone: '010-1234-5679',
-      status: '일시정지',
-      startDate: '2025-01-13',
-      endDate: '2025-01-14',
-      expiryDate: '2026-01-13',
-    },
-  ]);
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchSubscribers = async () => {
+    try {
+      setIsLoading(true);
+      const { accessToken } = await getAccessToken();
+
+      if (!accessToken) {
+        throw new Error('인증이 필요합니다');
+      }
+
+      const response = await fetch(`${BASEURL}/api/subscriptions/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('상품 목록을 불러오는데 실패했습니다');
+      }
+
+      const data = await response.json();
+      setSubscribers(data);
+      // console.log(data);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+      setError('상품 목록을 불러오는데 실패했습니다');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscribers();
+  }, []);
 
   const [statusFilters, setStatusFilters] = useState({
     inProgress: false,

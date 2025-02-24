@@ -6,7 +6,7 @@ type LoginResponse = {
 };
 
 export const loginAdmin = async (email: string, password: string): Promise<LoginResponse> => {
-  const response = await fetch(`${API_URL}/api/user/login/`, {
+  const response = await fetch(`${API_URL}/api/admin/login/`, {
     method: 'POST',
     headers: {
       accept: 'application/json',

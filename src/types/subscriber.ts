@@ -6,6 +6,12 @@ export interface Subscriber {
   startDate: string;
   endDate: string;
   expiryDate: string;
+  user: {
+    email: string;
+    id: string;
+    phone: string;
+    username: string;
+  };
 }
 
 export interface SubscriberCountProps {

@@ -41,7 +41,7 @@ const ReviewPage = () => {
 
       const data = await response.json();
 
-      setReviews(data);
+      setReviews(data.requests);
     } catch (err) {
       setError('리뷰를 불러오는 중 오류가 발생했습니다.');
       console.error('Error fetching reviews:', err);
