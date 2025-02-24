@@ -16,7 +16,7 @@ const ReviewPage = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [searchFilter, setSearchFilter] = useState({
-    field: '' as keyof Review,
+    field: '' as keyof Review | `user.${string}`,
     value: '',
   });
 
@@ -56,7 +56,7 @@ const ReviewPage = () => {
 
   const handleSearch = useCallback(
     (
-      field: keyof Review,
+      field: keyof Review | `user.${string}`,
       value: string | { start: string | undefined; end: string | undefined },
     ) => {
       if (typeof value === 'string') {
@@ -76,14 +76,21 @@ const ReviewPage = () => {
 
     if (searchFilter.value) {
       filtered = filtered.filter(review => {
-        const fieldValue = review[searchFilter.field];
+        let fieldValue;
+
+        if (searchFilter.field.startsWith('user.')) {
+          const [_, field] = searchFilter.field.split('.');
+          fieldValue = review.user[field as keyof typeof review.user];
+        } else {
+          fieldValue = review[searchFilter.field as keyof typeof review];
+        }
+
         return String(fieldValue).toLowerCase().includes(String(searchFilter.value).toLowerCase());
       });
     }
 
     return filtered;
   }, [reviews, searchFilter]);
-
   return (
     <div className="pl-[28.5rem]">
       <div className="p-[3.1rem]">

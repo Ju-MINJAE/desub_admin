@@ -13,12 +13,10 @@ const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function SubscriptionStatus() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   const fetchSubscribers = async () => {
     try {
-      setIsLoading(true);
       const { accessToken } = await getAccessToken();
 
       if (!accessToken) {
@@ -43,8 +41,6 @@ export default function SubscriptionStatus() {
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -58,7 +54,7 @@ export default function SubscriptionStatus() {
   });
 
   const [searchFilter, setSearchFilter] = useState<{
-    field: keyof Subscriber;
+    field: keyof Subscriber | `user.${string}`;
     value: string | { start: string | undefined; end: string | undefined };
   }>({
     field: '' as keyof Subscriber,
@@ -74,10 +70,12 @@ export default function SubscriptionStatus() {
 
   const handleSearch = useCallback(
     (
-      field: keyof Subscriber,
+      field: keyof Subscriber | `user.${string}`,
       value: string | { start: string | undefined; end: string | undefined },
     ) => {
-      setSearchFilter({ field, value });
+      if (typeof value === 'string') {
+        setSearchFilter({ field, value });
+      }
     },
     [],
   );
@@ -95,7 +93,14 @@ export default function SubscriptionStatus() {
 
     if (searchFilter.value) {
       filtered = filtered.filter(subscriber => {
-        const fieldValue = subscriber[searchFilter.field];
+        let fieldValue;
+
+        if (searchFilter.field.startsWith('user.')) {
+          const [_, field] = searchFilter.field.split('.');
+          fieldValue = subscriber.user[field as keyof typeof subscriber.user];
+        } else {
+          fieldValue = subscriber[searchFilter.field as keyof Subscriber];
+        }
 
         if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
           if (!searchFilter.value.start && !searchFilter.value.end) {
