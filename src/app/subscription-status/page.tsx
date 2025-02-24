@@ -14,6 +14,11 @@ const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export default function SubscriptionStatus() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [dashboard, setDashBoard] = useState({
+    total_subscriptions: 0,
+    new_subscriptions_today: 0,
+    paused_subscriptions: 0,
+  });
 
   const fetchSubscribers = async () => {
     try {
@@ -35,9 +40,9 @@ export default function SubscriptionStatus() {
         throw new Error('상품 목록을 불러오는데 실패했습니다');
       }
 
-      const data = await response.json();
-      setSubscribers(data.requests);
-      console.log(data.requests);
+      const { dashboard, requests } = await response.json();
+      setSubscribers(requests);
+      setDashBoard(dashboard);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
@@ -131,7 +136,11 @@ export default function SubscriptionStatus() {
         <Heading tag="h1" className="mt-[2.1rem]">
           구독현황관리
         </Heading>
-        <SubscriberCount totalCount={0} newCount={0} pausedCount={0} />
+        <SubscriberCount
+          totalCount={dashboard.total_subscriptions}
+          newCount={dashboard.new_subscriptions_today}
+          pausedCount={dashboard.paused_subscriptions}
+        />
 
         <div className="flex justify-between items-center mt-[4.9rem]">
           <ExportExcelButton<Subscriber>

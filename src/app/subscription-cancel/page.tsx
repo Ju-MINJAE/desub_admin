@@ -14,8 +14,10 @@ const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export default function SubscriptionCancel() {
   const [cancellations, setCancellations] = useState<Cancellation[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [subCancelAll, setSubCancelAll] = useState<number>(0);
-  const [subCancelToday, setSubCancelToday] = useState<number>(0);
+  const [dashboard, setDashBoard] = useState({
+    sub_cancel_all: 0,
+    sub_cancel_today: 0,
+  });
 
   const fetchCancellations = async () => {
     try {
@@ -37,11 +39,9 @@ export default function SubscriptionCancel() {
         throw new Error('상품 목록을 불러오는데 실패했습니다');
       }
 
-      const data = await response.json();
-      setCancellations(data.requests);
-      console.log(data);
-      setSubCancelAll(data.dashboard.sub_cancel_all);
-      setSubCancelToday(data.dashboard.sub_cancel_today);
+      const { dashboard, requests } = await response.json();
+      setCancellations(requests);
+      setDashBoard(dashboard);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
@@ -123,7 +123,8 @@ export default function SubscriptionCancel() {
         </Heading>
         <div className="mt-[1.8rem]">
           <p className="text-[1.8rem]">
-            전체 취소 수 : {subCancelAll}명 | 오늘 신규 취소 : {subCancelToday}명
+            전체 취소 수 : {dashboard.sub_cancel_all}명 | 오늘 신규 취소 :
+            {dashboard.sub_cancel_today}명
           </p>
         </div>
 
