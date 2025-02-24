@@ -44,7 +44,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex flex-col justify-center items-center">
       <div className="pt-[13.6rem]">
-        <Image src="/images/desub_logo.png" alt="desub_logo" width={460} height={105} />
+        <Image src="/images/desub_logo.png" alt="desub_logo" width={460} height={105} priority />
       </div>
       <h1 className="pt-[3.689rem] font-semibold text-[4rem] poppins">Admin</h1>
 
