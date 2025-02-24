@@ -14,8 +14,10 @@ const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 export default function Sales() {
   const [sales, setSales] = useState<Sale[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [monthTotalSales, setMonthTotalSales] = useState<number>(0);
-  const [monthCancelSales, setMonthCancelSales] = useState<number>(0);
+  const [dashboard, setDashBoard] = useState({
+    monthly_sales: 0,
+    monthly_refunds: 0,
+  });
 
   const fetchSales = async () => {
     try {
@@ -39,10 +41,9 @@ export default function Sales() {
         throw new Error('상품 목록을 불러오는데 실패했습니다');
       }
 
-      const data = await response.json();
-      setSales(data.transactions);
-      setMonthTotalSales(data.dashboard.monthly_sales);
-      setMonthCancelSales(data.dashboard.monthly_refunds);
+      const { dashboard, transactions } = await response.json();
+      setSales(transactions);
+      setDashBoard(dashboard);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
@@ -116,7 +117,10 @@ export default function Sales() {
         <Heading tag="h1" className="mt-[2.1rem]">
           매출관리
         </Heading>
-        <SalesCount monthTotalSales={monthTotalSales} monthCancelSales={monthCancelSales} />
+        <SalesCount
+          monthTotalSales={dashboard.monthly_sales}
+          monthCancelSales={dashboard.monthly_refunds}
+        />
 
         <div className="flex justify-between items-center mt-[4.9rem]">
           <ExportExcelButton<Sale>
