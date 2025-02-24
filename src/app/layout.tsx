@@ -12,6 +12,17 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: 'desub admin',
   description: 'desub admin',
+  robots: 'noindex, nofollow',
+  openGraph: {
+    images: [
+      {
+        url: 'https://www.admin.desub.kr/images/desub_thumbnail.png',
+        width: 1200,
+        height: 630,
+        alt: 'desub 썸네일 이미지',
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
