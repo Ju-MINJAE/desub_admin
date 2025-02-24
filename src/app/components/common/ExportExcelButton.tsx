@@ -45,7 +45,7 @@ export default function ExportExcelButton<T extends WithUser>({
   return (
     <button
       onClick={handleExport}
-      className="w-[14rem] h-[3.7rem] border border-black text-[1.4rem] rounded-[1.2rem]"
+      className="w-[14rem] h-[3.7rem] border border-black text-[1.4rem] rounded-[1.2rem] whitespace-nowrap"
     >
       excel download
     </button>

@@ -7,12 +7,12 @@ import { SearchOption } from '@/types/search';
 import { Subscriber } from '@/types/subscriber';
 
 export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
-  { value: 'cancelDate', label: '취소일자', inputType: 'date' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
+  { value: 'cancelled_date', label: '취소일자', inputType: 'date' },
   {
-    value: 'cancelReason',
+    value: 'cancelled_reason',
     label: '취소사유',
     inputType: 'select',
     options: [

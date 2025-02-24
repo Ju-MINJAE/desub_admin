@@ -27,7 +27,6 @@ const ReviewPage = () => {
     const { accessToken } = await getAccessToken();
     setIsLoading(true);
     try {
-      console.log('accessToken:', accessToken);
       const response = await fetch(`${BASEURL}/api/review/`, {
         method: 'GET',
         credentials: 'include',
