@@ -12,7 +12,6 @@ export const passwordChangeSchema = z.object({
         hasNumber: /\d/.test(password),
         hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password),
       };
-
       const failedValidations = Object.entries(validations)
         .filter(([_, isValid]) => !isValid)
         .map(([key]) => {

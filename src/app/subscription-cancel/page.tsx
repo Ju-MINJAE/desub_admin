@@ -123,7 +123,7 @@ export default function SubscriptionCancel() {
         </Heading>
         <div className="mt-[1.8rem]">
           <p className="text-[1.8rem]">
-            전체 취소 수 : {dashboard.sub_cancel_all}명 | 오늘 신규 취소 :
+            전체 취소 수 : {dashboard.sub_cancel_all}명 | 오늘 신규 취소 :{' '}
             {dashboard.sub_cancel_today}명
           </p>
         </div>

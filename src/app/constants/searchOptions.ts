@@ -16,18 +16,18 @@ export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
     label: '취소사유',
     inputType: 'select',
     options: [
-      { value: '가격이 비싸서', label: '가격이 비싸서' },
+      { value: 'expensive', label: '가격이 비싸서' },
       {
-        value: '퀄리티가 마음에 들지 않아서',
+        value: 'quality',
         label: '퀄리티가 마음에 들지 않아서',
       },
-      { value: '소통이 느려서', label: '소통이 느려서' },
+      { value: 'slow_communication', label: '소통이 느려서' },
       {
-        value: '정직원을 구하는 것이 더 편해서',
+        value: 'hire_full_time',
         label: '정직원을 구하는 것이 더 편해서',
       },
-      { value: '회사 예산이 줄어들어서', label: '회사 예산이 줄어들어서' },
-      { value: 'other', label: '기타' },
+      { value: 'budget_cut', label: '회사 예산이 줄어들어서' },
+      { value: '기타', label: '기타' },
     ],
   },
 ];
