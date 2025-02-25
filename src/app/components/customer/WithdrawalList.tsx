@@ -13,8 +13,13 @@ const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function WithdrawalList() {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [selectedWithdrawal, setSelectedWithdrawal] = useState<Withdrawal | null>(null);
+  const [isReasonModalOpen, setIsReasonModalOpen] = useState(false);
+  const [selectedDetailWithdrawal, setSelectedDetailWithdrawal] = useState<Withdrawal | null>(null);
 
-  const fetchSubscribers = async () => {
+  // 탈퇴관리 API 호출 (user-delete)
+  const fetchWithdrawals = async () => {
     try {
       const { accessToken } = await getAccessToken();
 
@@ -43,7 +48,7 @@ export default function WithdrawalList() {
   };
 
   useEffect(() => {
-    fetchSubscribers();
+    fetchWithdrawals();
   }, []);
 
   const [searchFilter, setSearchFilter] = useState<{
@@ -53,11 +58,6 @@ export default function WithdrawalList() {
     field: '' as keyof Withdrawal,
     value: '',
   });
-
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
-  const [selectedWithdrawal, setSelectedWithdrawal] = useState<Withdrawal | null>(null);
-  const [isReasonModalOpen, setIsReasonModalOpen] = useState(false);
-  const [selectedDetailWithdrawal, setSelectedDetailWithdrawal] = useState<Withdrawal | null>(null);
 
   const handleSearch = useCallback(
     (
@@ -116,17 +116,37 @@ export default function WithdrawalList() {
     setIsReasonModalOpen(true);
   };
 
-  const handleConfirmWithdraw = () => {
+  // 탈퇴 처리 API 호출 (DELETE admin/admin)
+  const handleConfirmWithdraw = async () => {
     if (!selectedWithdrawal) return;
 
-    setWithdrawals(prev =>
-      prev.map(w =>
-        w.user.name === selectedWithdrawal.user.name ? { ...w, withdrawalStatus: true } : w,
-      ),
-    );
-    alert('탈퇴 처리가 완료되었습니다.');
-    setIsConfirmModalOpen(false);
-    setSelectedWithdrawal(null);
+    try {
+      const { accessToken } = await getAccessToken();
+
+      const response = await fetch(`${BASEURL}/api/admin/admin/?id=${selectedWithdrawal.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('탈퇴 처리에 실패했습니다');
+      }
+
+      setWithdrawals(prev =>
+        prev.map(w => (w.id === selectedWithdrawal.id ? { ...w, withdrawalStatus: true } : w)),
+      );
+
+      alert('탈퇴 처리가 완료되었습니다.');
+      setIsConfirmModalOpen(false);
+      setSelectedWithdrawal(null);
+      fetchWithdrawals();
+    } catch (error) {
+      console.error('Failed to withdraw user:', error);
+      alert('탈퇴 처리에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   return (
