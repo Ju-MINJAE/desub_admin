@@ -143,7 +143,9 @@ export default function CustomerList() {
         <Search<Customer> onSearch={handleSearch} searchOptions={customerSearchOptions} />
       </div>
 
-      <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">검색 결과 : {0}</p>
+      <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
+        검색 결과 : {filteredCustomers.length}
+      </p>
 
       <CustomerTable customers={filteredCustomers} onHistoryClick={handleHistoryClick} />
 
