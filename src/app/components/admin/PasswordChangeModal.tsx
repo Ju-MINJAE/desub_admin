@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { X } from 'lucide-react';
 import { z } from 'zod';
 import { passwordChangeSchema } from '@/schemas/adminSchema';
+import { getAccessToken } from '@/actions/auth/getAccessToken';
+const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface PasswordChangeModalProps {
   isOpen: boolean;
@@ -18,20 +20,41 @@ export default function PasswordChangeModal({
 }: PasswordChangeModalProps) {
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   if (!isOpen) return null;
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     try {
+      const { accessToken } = await getAccessToken();
       passwordChangeSchema.parse({ newPassword });
+      setIsLoading(true);
+
+      const response = await fetch(`${BASEURL}/api/admin/admin/`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          authorization: `Bearer ${accessToken}`,
+          accept: 'application/json',
+        },
+        body: JSON.stringify({ newPassword }),
+      });
+
+      if (!response.ok) {
+        throw new Error('비밀번호 변경에 실패했습니다');
+      }
+
       onSubmit(newPassword);
       onClose();
     } catch (err) {
       if (err instanceof z.ZodError) {
         setError(err.errors[0].message);
-      } else if (err instanceof Error) {
-        setError(err.message);
+      } else {
+        console.error('Password change failed:', err);
+        alert('비밀번호 변경에 실패했습니다. 다시 시도해주세요.');
       }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -74,9 +97,10 @@ export default function PasswordChangeModal({
         <div className="flex justify-center">
           <button
             onClick={handleSubmit}
+            disabled={isLoading}
             className="w-[54rem] bg-black text-white py-[1.5rem] rounded-[1.8rem] text-[1.8rem] mt-[4rem]"
           >
-            비밀번호 변경하기
+            {isLoading ? '변경 중...' : '비밀번호 변경하기'}
           </button>
         </div>
       </div>

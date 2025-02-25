@@ -1,4 +1,6 @@
 import { Withdrawal } from '@/types/customer';
+import { format } from 'date-fns';
+import { parseISO } from 'date-fns/fp';
 import { X } from 'lucide-react';
 
 interface WithdrawalReasonModalProps {
@@ -27,19 +29,19 @@ export default function WithdrawalReasonModal({
         <div className="space-y-[2.3rem] px-[5.4rem]">
           <div>
             <span className="inline-block w-[16rem]">고객명</span>
-            <span>{withdrawal.name}</span>
+            <span>{withdrawal.user.name}</span>
           </div>
           <div>
             <span className="inline-block w-[16rem]">이메일주소(아이디)</span>
-            <span>{withdrawal.email}</span>
+            <span>{withdrawal.user.email}</span>
           </div>
           <div>
             <span className="inline-block w-[16rem]">탈퇴일자</span>
-            <span>{withdrawal.withdrawalDate}</span>
+            <span>{format(parseISO(withdrawal.deleted_at), 'yyyy-MM-dd')}</span>
           </div>
           <div className="flex items-center mb-[4.4rem]">
             <span className="inline-block w-[16rem]">탈퇴사유</span>
-            <span>{withdrawal.withdrawalReason}</span>
+            <span>{withdrawal.reason}</span>
           </div>
         </div>
         <div className="flex justify-center">

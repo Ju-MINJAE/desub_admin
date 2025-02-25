@@ -1,11 +1,16 @@
 export interface Subscriber {
-  name: string;
-  email: string;
-  phone: string;
-  status: '진행중' | '일시정지';
-  startDate: string;
-  endDate: string;
-  expiryDate: string;
+  auto_renew?: boolean;
+  expiry_date: string;
+  first_payment_date: string;
+  id?: number;
+  last_payment_date: string;
+  plan_name?: string;
+  user: {
+    email: string;
+    name: string;
+    phone: string;
+    sub_status: string;
+  };
 }
 
 export interface SubscriberCountProps {
@@ -14,5 +19,11 @@ export interface SubscriberCountProps {
   pausedCount: number;
 }
 
-export type SortField = 'name' | 'email' | 'phone' | 'startDate' | 'endDate' | 'expiryDate';
+export type SortField =
+  | 'user.name'
+  | 'user.email'
+  | 'user.phone'
+  | 'first_payment_date'
+  | 'last_payment_date'
+  | 'expiry_date';
 export type SortOrder = 'asc' | 'desc';

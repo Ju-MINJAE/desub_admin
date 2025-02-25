@@ -1,16 +1,19 @@
 export interface Admin {
-  role: 'Master' | 'Admin';
-  email: string;
-  name: string;
-  phone: string;
-  createdAt: string;
+  classification: string;
+  created_at: string;
+  id: string;
   passwordChangedAt: string;
   status: boolean | '-';
+  user: {
+    email: string;
+    name: string;
+    phone: string;
+  };
 }
 
-export interface AdminFormData {
-  id: string;
-  password: string;
-  name: string;
-  phone: string;
-}
+export type AdminSortField =
+  | 'classification'
+  | 'user.name'
+  | 'user.email'
+  | 'user.phone'
+  | 'created_at';

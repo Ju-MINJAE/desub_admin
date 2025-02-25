@@ -47,13 +47,13 @@ export default function SubscriptionTable({ subscribers }: SubscriptionTableProp
   }, [sortedSubscribers, currentPage]);
 
   const COMBINED_HEADERS: HeaderItem<SortField>[] = [
-    { field: 'name', label: '이름', type: 'sortable' },
-    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
-    { field: 'phone', label: '전화번호', type: 'sortable' },
+    { field: 'user.name', label: '이름', type: 'sortable' },
+    { field: 'user.email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'user.phone', label: '전화번호', type: 'sortable' },
     { field: undefined, label: '구독현황', type: 'static' },
-    { field: 'startDate', label: '최초결제일', type: 'sortable' },
-    { field: 'endDate', label: '최근결제일', type: 'sortable' },
-    { field: 'expiryDate', label: '구독만료일', type: 'sortable' },
+    { field: 'first_payment_date', label: '최초결제일', type: 'sortable' },
+    { field: 'last_payment_date', label: '최근결제일', type: 'sortable' },
+    { field: 'expiry_date', label: '구독만료일', type: 'sortable' },
   ];
 
   return (
@@ -82,13 +82,15 @@ export default function SubscriptionTable({ subscribers }: SubscriptionTableProp
         <tbody>
           {paginatedSubscribers.map((subscriber, index) => (
             <tr key={index} className="border-b">
-              <td className="py-4 text-[1.5rem] text-center">{subscriber.name}</td>
-              <td className="py-4 text-[1.5rem] text-center">{subscriber.email}</td>
-              <td className="py-4 text-[1.5rem] text-center">{subscriber.phone}</td>
-              <td className="py-4 text-[1.5rem] text-center">{subscriber.status}</td>
-              <td className="py-4 text-[1.5rem] text-center">{subscriber.startDate}</td>
-              <td className="py-4 text-[1.5rem] text-center">{subscriber.endDate}</td>
-              <td className="py-4 text-[1.5rem] text-center">{subscriber.expiryDate}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.user.name}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.user.email}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.user.phone}</td>
+              <td className="py-4 text-[1.5rem] text-center">
+                {subscriber.user.sub_status === 'active' ? '진행중' : '일시정지'}
+              </td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.first_payment_date}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.last_payment_date}</td>
+              <td className="py-4 text-[1.5rem] text-center">{subscriber.expiry_date}</td>
             </tr>
           ))}
         </tbody>

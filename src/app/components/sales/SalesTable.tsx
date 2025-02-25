@@ -48,12 +48,12 @@ export default function SalesTable({ sales }: SaleTableProps) {
   }, [sortedSales, currentPage]);
 
   const TABLE_HEADERS: Array<{ field: SaleSortField; label: string }> = [
-    { field: 'payDate', label: '결제일' },
-    { field: 'price', label: '금액(원)' },
-    { field: 'content', label: '내용' },
-    { field: 'name', label: '이름' },
-    { field: 'email', label: '이메일주소(아이디)' },
-    { field: 'phone', label: '전화번호' },
+    { field: 'transaction_date', label: '결제일' },
+    { field: 'transaction_amount', label: '금액(원)' },
+    { field: 'transaction_type', label: '내용' },
+    { field: 'user.name', label: '이름' },
+    { field: 'user.email', label: '이메일주소(아이디)' },
+    { field: 'user.phone', label: '전화번호' },
   ];
 
   return (
@@ -76,12 +76,12 @@ export default function SalesTable({ sales }: SaleTableProps) {
         <tbody>
           {paginatedSales.map((sale, index) => (
             <tr key={index} className="border-b">
-              <td className="py-4 text-[1.5rem] text-center">{sale.payDate}</td>
-              <td className="py-4 text-[1.5rem] text-center">{sale.price}</td>
-              <td className="py-4 text-[1.5rem] text-center">{sale.content}</td>
-              <td className="py-4 text-[1.5rem] text-center">{sale.name}</td>
-              <td className="py-4 text-[1.5rem] text-center">{sale.email}</td>
-              <td className="py-4 text-[1.5rem] text-center">{sale.phone}</td>
+              <td className="py-4 text-[1.5rem] text-center">{sale.transaction_date}</td>
+              <td className="py-4 text-[1.5rem] text-center">{sale.transaction_amount}</td>
+              <td className="py-4 text-[1.5rem] text-center">{sale.transaction_type}</td>
+              <td className="py-4 text-[1.5rem] text-center">{sale.user.name}</td>
+              <td className="py-4 text-[1.5rem] text-center">{sale.user.email}</td>
+              <td className="py-4 text-[1.5rem] text-center">{sale.user.phone}</td>
             </tr>
           ))}
         </tbody>

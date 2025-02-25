@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import type { Subscriber } from '@/types/subscriber';
 import SubscriberCount from '../components/subscription-status/SubscriberCount';
 import SubscriptionTable from '../components/subscription-status/SubscriotionTable';
@@ -8,28 +8,51 @@ import Search from '../components/common/Search';
 import { subscriberSearchOptions } from '../constants/searchOptions';
 import { Heading } from '../components/ui/Heading';
 import ExportExcelButton from '../components/common/ExportExcelButton';
+import { getAccessToken } from '@/actions/auth/getAccessToken';
+const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function SubscriptionStatus() {
-  const [subscribers, setSubscribers] = useState<Subscriber[]>([
-    {
-      name: '홍길동',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5678',
-      status: '진행중',
-      startDate: '2025-01-12',
-      endDate: '2025-01-13',
-      expiryDate: '2025-02-13',
-    },
-    {
-      name: '홍길똥',
-      email: 'gilddong.hong@gmail.com',
-      phone: '010-1234-5679',
-      status: '일시정지',
-      startDate: '2025-01-13',
-      endDate: '2025-01-14',
-      expiryDate: '2026-01-13',
-    },
-  ]);
+  const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [dashboard, setDashBoard] = useState({
+    total_subscriptions: 0,
+    new_subscriptions_today: 0,
+    paused_subscriptions: 0,
+  });
+
+  const fetchSubscribers = async () => {
+    try {
+      const { accessToken } = await getAccessToken();
+
+      if (!accessToken) {
+        throw new Error('인증이 필요합니다');
+      }
+
+      const response = await fetch(`${BASEURL}/api/admin/subscriptions/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('상품 목록을 불러오는데 실패했습니다');
+      }
+
+      const data = await response.json();
+      setSubscribers(data.requests);
+      setDashBoard(data.dashboard);
+      console.log(data);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+      setError('상품 목록을 불러오는데 실패했습니다');
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscribers();
+  }, []);
 
   const [statusFilters, setStatusFilters] = useState({
     inProgress: false,
@@ -37,7 +60,7 @@ export default function SubscriptionStatus() {
   });
 
   const [searchFilter, setSearchFilter] = useState<{
-    field: keyof Subscriber;
+    field: keyof Subscriber | `user.${string}`;
     value: string | { start: string | undefined; end: string | undefined };
   }>({
     field: '' as keyof Subscriber,
@@ -53,10 +76,12 @@ export default function SubscriptionStatus() {
 
   const handleSearch = useCallback(
     (
-      field: keyof Subscriber,
+      field: keyof Subscriber | `user.${string}`,
       value: string | { start: string | undefined; end: string | undefined },
     ) => {
-      setSearchFilter({ field, value });
+      if (typeof value === 'string') {
+        setSearchFilter({ field, value });
+      }
     },
     [],
   );
@@ -66,15 +91,22 @@ export default function SubscriptionStatus() {
 
     if (statusFilters.inProgress || statusFilters.paused) {
       filtered = filtered.filter(subscriber => {
-        if (statusFilters.inProgress && subscriber.status === '진행중') return true;
-        if (statusFilters.paused && subscriber.status === '일시정지') return true;
+        if (statusFilters.inProgress && subscriber.user.sub_status === 'active') return true;
+        if (statusFilters.paused && subscriber.user.sub_status === 'pause') return true;
         return false;
       });
     }
 
     if (searchFilter.value) {
       filtered = filtered.filter(subscriber => {
-        const fieldValue = subscriber[searchFilter.field];
+        let fieldValue;
+
+        if (searchFilter.field.startsWith('user.')) {
+          const [_, field] = searchFilter.field.split('.');
+          fieldValue = subscriber.user[field as keyof typeof subscriber.user];
+        } else {
+          fieldValue = subscriber[searchFilter.field as keyof Subscriber];
+        }
 
         if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
           if (!searchFilter.value.start && !searchFilter.value.end) {
@@ -105,20 +137,24 @@ export default function SubscriptionStatus() {
         <Heading tag="h1" className="mt-[2.1rem]">
           구독현황관리
         </Heading>
-        <SubscriberCount totalCount={0} newCount={0} pausedCount={0} />
+        <SubscriberCount
+          totalCount={dashboard.total_subscriptions}
+          newCount={dashboard.new_subscriptions_today}
+          pausedCount={dashboard.paused_subscriptions}
+        />
 
         <div className="flex justify-between items-center mt-[4.9rem]">
           <ExportExcelButton<Subscriber>
             data={filteredSubscribers}
             fileName="구독자_목록"
             headers={{
-              name: '이름',
-              email: '이메일',
-              phone: '전화번호',
-              status: '구독현황',
-              startDate: '최초결제일',
-              endDate: '최근결제일',
-              expiryDate: '구독만료일',
+              'user.name': '이름',
+              'user.email': '이메일',
+              'user.phone': '전화번호',
+              'user.sub_status': '구독현황',
+              first_payment_date: '최초결제일',
+              last_payment_date: '최근결제일',
+              expiry_date: '구독만료일',
             }}
           />
           <Search<Subscriber> onSearch={handleSearch} searchOptions={subscriberSearchOptions} />

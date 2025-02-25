@@ -7,12 +7,12 @@ import { SearchOption } from '@/types/search';
 import { Subscriber } from '@/types/subscriber';
 
 export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
-  { value: 'cancelDate', label: '취소일자', inputType: 'date' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
+  { value: 'cancelled_date', label: '취소일자', inputType: 'date' },
   {
-    value: 'cancelReason',
+    value: 'cancelled_reason',
     label: '취소사유',
     inputType: 'select',
     options: [
@@ -27,35 +27,35 @@ export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
         label: '정직원을 구하는 것이 더 편해서',
       },
       { value: '회사 예산이 줄어들어서', label: '회사 예산이 줄어들어서' },
-      { value: '기타', label: '기타' },
+      { value: 'other', label: '기타' },
     ],
   },
 ];
 
 export const subscriberSearchOptions: SearchOption<Subscriber>[] = [
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
   {
-    value: 'status',
+    value: 'user.sub_status',
     label: '구독현황',
     inputType: 'select',
     options: [
-      { value: '진행중', label: '진행중' },
-      { value: '일시정지', label: '일시정지' },
+      { value: 'active', label: '진행중' },
+      { value: 'paused', label: '일시정지' },
     ],
   },
-  { value: 'startDate', label: '최초결제일', inputType: 'date' },
-  { value: 'endDate', label: '최근결제일', inputType: 'date' },
-  { value: 'expiryDate', label: '구독만료일', inputType: 'date' },
+  { value: 'first_payment_date', label: '최초결제일', inputType: 'date' },
+  { value: 'last_payment_date', label: '최근결제일', inputType: 'date' },
+  { value: 'expiry_date', label: '구독만료일', inputType: 'date' },
 ];
 
 export const reviewSearchOptions: SearchOption<Review>[] = [
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'user.username', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
   {
-    value: 'reviewRating',
+    value: 'rating',
     label: '별점',
     inputType: 'select',
     options: [
@@ -69,11 +69,11 @@ export const reviewSearchOptions: SearchOption<Review>[] = [
 ];
 
 export const customerSearchOptions: SearchOption<Customer>[] = [
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
   {
-    value: 'subscription',
+    value: 'is_subscribed',
     label: '구독여부',
     inputType: 'select',
     options: [
@@ -82,28 +82,29 @@ export const customerSearchOptions: SearchOption<Customer>[] = [
     ],
   },
   {
-    value: 'status',
+    value: 'sub_status',
     label: '구독현황',
     inputType: 'select',
     options: [
-      { value: '진행중', label: '진행중' },
-      { value: '일시정지', label: '일시정지' },
-      { value: '구독취소', label: '구독취소' },
-      { value: '-', label: '-' },
+      { value: 'active', label: '진행중' },
+      { value: 'paused', label: '일시정지' },
+      { value: 'cancelled', label: '구독취소' },
+      { value: 'refund_pending', label: '환불대기' },
+      { value: 'none', label: '-' },
     ],
   },
-  { value: 'signupDate', label: '가입일', inputType: 'date' },
-  { value: 'lastLoginDate', label: '마지막 방문일', inputType: 'date' },
-  { value: 'startDate', label: '최초결제일', inputType: 'date' },
-  { value: 'endDate', label: '최근결제일', inputType: 'date' },
-  { value: 'expiryDate', label: '구독만료일', inputType: 'date' },
+  { value: 'created_at', label: '가입일', inputType: 'date' },
+  { value: 'last_login', label: '마지막 방문일', inputType: 'date' },
+  { value: 'start_date', label: '최초결제일', inputType: 'date' },
+  { value: 'last_paid_at', label: '최근결제일', inputType: 'date' },
+  { value: 'end_date', label: '구독만료일', inputType: 'date' },
 ];
 
 export const saleSearchOptions: SearchOption<Sale>[] = [
-  { value: 'payDate', label: '결제일', inputType: 'date' },
-  { value: 'price', label: '금액', inputType: 'text' },
+  { value: 'transaction_date', label: '결제일', inputType: 'date' },
+  { value: 'transaction_amount', label: '금액', inputType: 'text' },
   {
-    value: 'content',
+    value: 'transaction_type',
     label: '내용',
     inputType: 'select',
     options: [
@@ -111,21 +112,21 @@ export const saleSearchOptions: SearchOption<Sale>[] = [
       { value: '구독취소', label: '구독취소' },
     ],
   },
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
 ];
 
 export const withdrawalSearchOptions: SearchOption<Withdrawal>[] = [
-  { value: 'withdrawalDate', label: '탈퇴신청일', inputType: 'date' },
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'deleted_at', label: '탈퇴신청일', inputType: 'date' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
 ];
 
 export const adminSearchOptions: SearchOption<Admin>[] = [
   {
-    value: 'role',
+    value: 'classification',
     label: '분류',
     inputType: 'select',
     options: [
@@ -133,8 +134,8 @@ export const adminSearchOptions: SearchOption<Admin>[] = [
       { value: 'Admin', label: 'Admin' },
     ],
   },
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
-  { value: 'createdAt', label: '계정 생성일', inputType: 'date' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
+  { value: 'created_at', label: '계정 생성일', inputType: 'date' },
 ];

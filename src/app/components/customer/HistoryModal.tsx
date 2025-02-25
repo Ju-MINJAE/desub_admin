@@ -1,55 +1,72 @@
-import { SubscriptionHistory } from '@/types/history';
-import { Customer } from '@/types/customer';
 import { X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { getAccessToken } from '@/actions/auth/getAccessToken';
+const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 interface HistoryModalProps {
   isOpen: boolean;
   onClose: () => void;
-  customer: Customer;
+  customerId: string;
 }
 
-export default function HistoryModal({ isOpen, onClose, customer }: HistoryModalProps) {
-  if (!isOpen) return null;
+interface HistoryItem {
+  change_date: number;
+  status: string;
+  amount: string;
+}
 
-  const history: SubscriptionHistory[] = [
-    {
-      date: '2025-01-20',
-      type: '구독취소',
-      amount: 0,
-    },
-    {
-      date: '2025-01-01',
-      type: '결제',
-      amount: 1250000,
-    },
-    {
-      date: '2025-12-15',
-      type: '재개',
-      amount: '-',
-    },
-    {
-      date: '2025-12-13',
-      type: '일시정지',
-      amount: '-',
-    },
-    {
-      date: '2023-12-01',
-      type: '결제',
-      amount: 1250000,
-    },
-  ];
+export default function HistoryModal({ isOpen, onClose, customerId }: HistoryModalProps) {
+  const [history, setHistory] = useState<HistoryItem[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchHistory = async () => {
+    try {
+      setIsLoading(true);
+      const { accessToken } = await getAccessToken();
+
+      const response = await fetch(
+        `${BASEURL}/api/admin/subscriptions/history/?user_id=${customerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json',
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('히스토리 정보를 불러오는데 실패했습니다.');
+      }
+
+      const data = await response.json();
+      setHistory(data.history);
+      console.log(data);
+    } catch (error) {
+      console.error('Failed to fetch customer history:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen && customerId) {
+      fetchHistory();
+    }
+  }, [isOpen, customerId]);
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <div className="bg-white rounded-[4rem] p-[4.4rem] w-[70rem]">
-        <div className="flex justify-between items-center mb-[4.4rem]">
+      <div className="bg-white rounded-[4rem] p-[4.4rem] w-[70rem] max-h-[90vh] flex flex-col">
+        <div className="flex justify-between items-center mb-[4.4rem] sticky">
           <h2 className="text-[3rem] font-bold">구독변경이력 상세보기</h2>
           <button onClick={onClose}>
             <X size={40} className="text-[2.4rem]" />
           </button>
         </div>
 
-        <div className="px-[3rem]">
+        <div className="px-[3rem] overflow-y-auto flex-1">
           <table className="w-full">
             <thead>
               <tr className="border-y bg-[#F3F3F3]">
@@ -61,11 +78,11 @@ export default function HistoryModal({ isOpen, onClose, customer }: HistoryModal
             <tbody>
               {history.map((item, index) => (
                 <tr key={index} className="border-b">
-                  <td className="p-4 text-center">{item.date}</td>
-                  <td className="p-4 text-center">{item.type}</td>
+                  <td className="p-4 text-center">{item.change_date}</td>
+                  <td className="p-4 text-center">{item.status}</td>
                   <td className="p-4 text-right pr-[3rem]">
                     {typeof item.amount === 'number'
-                      ? `${item.amount.toLocaleString()}원`
+                      ? `${Number(item.amount).toLocaleString()}원`
                       : item.amount}
                   </td>
                 </tr>
@@ -74,7 +91,7 @@ export default function HistoryModal({ isOpen, onClose, customer }: HistoryModal
           </table>
         </div>
 
-        <div className="flex justify-center mt-[4.4rem]">
+        <div className="flex justify-center mt-[4.4rem] sticky">
           <button
             onClick={onClose}
             className="w-full max-w-[54rem] py-[1.5rem] rounded-[1.8rem] border border-black text-[1.8rem]"

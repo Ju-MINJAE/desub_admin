@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 
 interface SearchProps<T> {
   onSearch: (
-    field: keyof T,
+    field: keyof T | `user.${string}`,
     value: string | { start: string | undefined; end: string | undefined },
   ) => void;
   searchOptions: SearchOption<T>[];

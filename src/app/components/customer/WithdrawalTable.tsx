@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import SortableHeader from '../common/SortableHeader';
 import { HeaderItem } from '@/types/tableHeader';
 import Pagination from '../common/Pagination';
+import { format, parseISO } from 'date-fns';
 
 interface WithdrawalTableProps {
   withdrawals: Withdrawal[];
@@ -55,12 +56,12 @@ export default function WithdrawalTable({
   }, [sortedWithdrawals, currentPage]);
 
   const COMBINED_HEADERS: HeaderItem<WithdrawalSortField>[] = [
-    { field: 'withdrawalDate', label: '탈퇴신청일', type: 'sortable' },
-    { field: 'name', label: '이름', type: 'sortable' },
-    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
-    { field: 'phone', label: '전화번호', type: 'sortable' },
+    { field: 'deleted_at', label: '탈퇴신청일', type: 'sortable' },
+    { field: 'user.name', label: '이름', type: 'sortable' },
+    { field: 'user.email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'user.phone', label: '전화번호', type: 'sortable' },
     { field: undefined, label: '탈퇴사유', type: 'static' },
-    { field: 'withdrawalStatus', label: '탈퇴처리', type: 'sortable' },
+    { field: 'is_active', label: '탈퇴처리', type: 'sortable' },
   ];
 
   return (
@@ -89,17 +90,19 @@ export default function WithdrawalTable({
         <tbody>
           {paginatedWithdrawals.map((withdrawal, index) => (
             <tr key={index} className="border-b">
-              <td className="py-4 text-[1.5rem] text-center">{withdrawal.withdrawalDate}</td>
-              <td className="py-4 text-[1.5rem] text-center">{withdrawal.name}</td>
-              <td className="py-4 text-[1.5rem] text-center">{withdrawal.email}</td>
-              <td className="py-4 text-[1.5rem] text-center">{withdrawal.phone}</td>
+              <td className="py-4 text-[1.5rem] text-center">
+                {format(parseISO(withdrawal.deleted_at), 'yyyy-MM-dd')}
+              </td>
+              <td className="py-4 text-[1.5rem] text-center">{withdrawal.user.name}</td>
+              <td className="py-4 text-[1.5rem] text-center">{withdrawal.user.email}</td>
+              <td className="py-4 text-[1.5rem] text-center">{withdrawal.user.phone}</td>
               <td className="py-4 text-[1.5rem] text-center">
                 <button onClick={() => onDetail(withdrawal)} className="underline text-[1.5rem]">
                   상세보기
                 </button>
               </td>
               <td className="py-2 text-center">
-                {withdrawal.withdrawalStatus ? (
+                {withdrawal.is_active ? (
                   <span className="py-2 text-[1.5rem]">탈퇴완료</span>
                 ) : (
                   <button

@@ -1,4 +1,4 @@
-import { Cancellation } from '@/types/cancellation';
+import { Cancellation, CancellationSortField } from '@/types/cancellation';
 import { HeaderItem } from '@/types/tableHeader';
 import { useMemo, useState } from 'react';
 import SortableHeader from '../common/SortableHeader';
@@ -10,12 +10,12 @@ interface CancellationTableProps {
 }
 
 export default function CancellationTable({ cancellations, onRefund }: CancellationTableProps) {
-  const [sortField, setSortField] = useState<keyof Cancellation | null>(null);
+  const [sortField, setSortField] = useState<CancellationSortField | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // 한 페이지에 나올 아이템 수
 
-  const handleSort = (field: keyof Cancellation) => {
+  const handleSort = (field: CancellationSortField) => {
     if (sortField === field) {
       if (sortOrder === 'asc') {
         setSortOrder('desc');
@@ -50,11 +50,11 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
     return sortedCancellations.slice(startIndex, endIndex);
   }, [sortedCancellations, currentPage]);
 
-  const COMBINED_HEADERS: HeaderItem<keyof Cancellation>[] = [
-    { field: 'name', label: '이름', type: 'sortable' },
-    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
-    { field: 'phone', label: '전화번호', type: 'sortable' },
-    { field: 'cancelDate', label: '취소일자', type: 'sortable' },
+  const COMBINED_HEADERS: HeaderItem<CancellationSortField>[] = [
+    { field: 'user.name', label: '이름', type: 'sortable' },
+    { field: 'user.email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'user.phone', label: '전화번호', type: 'sortable' },
+    { field: 'cancelled_date', label: '취소일자', type: 'sortable' },
     { field: undefined, label: '취소사유', type: 'static' },
     { field: undefined, label: '환불처리', type: 'static' },
   ];
@@ -66,7 +66,7 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
           <tr className="border-y bg-[#F3F3F3]">
             {COMBINED_HEADERS.map((header, index) =>
               header.type === 'sortable' && header.field ? (
-                <SortableHeader<keyof Cancellation>
+                <SortableHeader<CancellationSortField>
                   key={header.field}
                   field={header.field}
                   label={header.label}
@@ -85,18 +85,27 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
         <tbody>
           {paginatedCancellations.map((cancellation, index) => (
             <tr key={index} className="border-b">
-              <td className="py-2 text-[1.5rem] text-center">{cancellation.name}</td>
-              <td className="py-2 text-[1.5rem] text-center">{cancellation.email}</td>
-              <td className="py-2 text-[1.5rem] text-center">{cancellation.phone}</td>
-              <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelDate}</td>
-              <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelReason}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.user.name}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.user.email}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.user.phone}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelled_date}</td>
+              <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelled_reason}</td>
               <td className="py-2 text-[1.5rem] text-center">
-                <button
-                  onClick={() => onRefund(cancellation)}
-                  className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
-                >
-                  환불
-                </button>
+                {cancellation.refund_status === 'refund_pending' ? (
+                  <button
+                    onClick={() => {
+                      onRefund(cancellation);
+                    }}
+                    className="w-[7rem] py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
+                  >
+                    환불
+                  </button>
+                ) : (
+                  <div className="flex items-center justify-center gap-2">
+                    <span>{cancellation.refund_date}</span>
+                    <span>{Number(cancellation.refund_amount).toLocaleString()}원</span>
+                  </div>
+                )}
               </td>
             </tr>
           ))}
