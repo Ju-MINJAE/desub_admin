@@ -9,11 +9,13 @@ import WithdrawalConfirmModal from './WithdrawalConfirmModal';
 import WithdrawalReasonModal from './WithdrawalReasonModal';
 import ExportExcelButton from '../common/ExportExcelButton';
 import { getAccessToken } from '@/actions/auth/getAccessToken';
+import WithdrawalCancelModal from './WithdrawalCancelModal';
 const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function WithdrawalList() {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
   const [selectedWithdrawal, setSelectedWithdrawal] = useState<Withdrawal | null>(null);
   const [isReasonModalOpen, setIsReasonModalOpen] = useState(false);
   const [selectedDetailWithdrawal, setSelectedDetailWithdrawal] = useState<Withdrawal | null>(null);
@@ -111,6 +113,11 @@ export default function WithdrawalList() {
     setIsConfirmModalOpen(true);
   };
 
+  const handleCancelClick = (withdrawal: Withdrawal) => {
+    setSelectedWithdrawal(withdrawal);
+    setIsCancelModalOpen(true);
+  };
+
   const handleDetailClick = (withdrawal: Withdrawal) => {
     setSelectedDetailWithdrawal(withdrawal);
     setIsReasonModalOpen(true);
@@ -150,6 +157,42 @@ export default function WithdrawalList() {
     }
   };
 
+  // 탈퇴 취소 처리 API 호출 (DELETE admin/admin)
+  const handleCancelWithdraw = async () => {
+    if (!selectedWithdrawal) return;
+
+    try {
+      const { accessToken } = await getAccessToken();
+
+      const response = await fetch(`${BASEURL}/api/admin/user-recovery/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ user_id: selectedWithdrawal.id }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.text();
+        console.error('Server error response:', errorData);
+        throw new Error('탈퇴 취소 처리에 실패했습니다');
+      }
+
+      setWithdrawals(prev =>
+        prev.map(w => (w.id === selectedWithdrawal.id ? { ...w, withdrawalStatus: false } : w)),
+      );
+
+      alert('탈퇴 취소가 완료되었습니다.');
+      setIsCancelModalOpen(false);
+      setSelectedWithdrawal(null);
+      fetchWithdrawals();
+    } catch (error) {
+      console.error('Failed to cancel withdrawl:', error);
+      alert('탈퇴 취소가 실패했습니다. 다시 시도해주세요.');
+    }
+  };
+
   return (
     <>
       <div className="flex justify-between items-center mt-[4.9rem]">
@@ -173,7 +216,18 @@ export default function WithdrawalList() {
         withdrawals={filteredWithdrawals}
         onWithdraw={handleWithdrawClick}
         onDetail={handleDetailClick}
+        onCancel={handleCancelClick}
       />
+      {selectedDetailWithdrawal && (
+        <WithdrawalReasonModal
+          isOpen={isReasonModalOpen}
+          onClose={() => {
+            setIsReasonModalOpen(false);
+            setSelectedDetailWithdrawal(null);
+          }}
+          withdrawal={selectedDetailWithdrawal}
+        />
+      )}
       {selectedWithdrawal && (
         <WithdrawalConfirmModal
           isOpen={isConfirmModalOpen}
@@ -185,14 +239,15 @@ export default function WithdrawalList() {
           customerName={selectedWithdrawal.user.name}
         />
       )}
-      {selectedDetailWithdrawal && (
-        <WithdrawalReasonModal
-          isOpen={isReasonModalOpen}
+      {selectedWithdrawal && (
+        <WithdrawalCancelModal
+          isOpen={isCancelModalOpen}
           onClose={() => {
-            setIsReasonModalOpen(false);
-            setSelectedDetailWithdrawal(null);
+            setIsCancelModalOpen(false);
+            setSelectedWithdrawal(null);
           }}
-          withdrawal={selectedDetailWithdrawal}
+          onConfirm={handleCancelWithdraw}
+          customerName={selectedWithdrawal.user.name}
         />
       )}
     </>

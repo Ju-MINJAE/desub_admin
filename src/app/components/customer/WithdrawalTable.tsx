@@ -8,12 +8,14 @@ import { format, parseISO } from 'date-fns';
 interface WithdrawalTableProps {
   withdrawals: Withdrawal[];
   onWithdraw?: (withdrawal: Withdrawal) => void;
+  onCancel?: (withdrawal: Withdrawal) => void;
   onDetail: (withdrawal: Withdrawal) => void;
 }
 
 export default function WithdrawalTable({
   withdrawals,
   onWithdraw,
+  onCancel,
   onDetail,
 }: WithdrawalTableProps) {
   const [sortField, setSortField] = useState<WithdrawalSortField | null>(null);
@@ -69,6 +71,7 @@ export default function WithdrawalTable({
     { field: 'user.phone', label: '전화번호', type: 'sortable' },
     { field: undefined, label: '탈퇴사유', type: 'static' },
     { field: 'is_deletion_confirmed', label: '탈퇴처리', type: 'sortable' },
+    { field: undefined, label: '탈퇴신청 취소', type: 'static' },
   ];
 
   return (
@@ -117,6 +120,18 @@ export default function WithdrawalTable({
                     className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
                   >
                     탈퇴
+                  </button>
+                )}
+              </td>
+              <td className="py-2 text-center">
+                {withdrawal.is_deletion_confirmed ? (
+                  <span className="py-2 text-[1.5rem] text-center">-</span>
+                ) : (
+                  <button
+                    onClick={() => onCancel?.(withdrawal)}
+                    className="w-[8rem] text-center py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
+                  >
+                    탈퇴취소
                   </button>
                 )}
               </td>
