@@ -1,5 +1,4 @@
 import { Withdrawal, WithdrawalSortField } from '@/types/customer';
-import { SortOrder } from '@/types/subscriber';
 import { useMemo, useState } from 'react';
 import SortableHeader from '../common/SortableHeader';
 import { HeaderItem } from '@/types/tableHeader';
@@ -18,7 +17,7 @@ export default function WithdrawalTable({
   onDetail,
 }: WithdrawalTableProps) {
   const [sortField, setSortField] = useState<WithdrawalSortField | null>(null);
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // 한 페이지에 나올 아이템 수
 
@@ -39,14 +38,22 @@ export default function WithdrawalTable({
   const sortedWithdrawals = [...withdrawals].sort((a, b) => {
     if (!sortField) return 0;
 
-    const aValue = a[sortField];
-    const bValue = b[sortField];
+    let aValue, bValue;
 
-    if (sortOrder === 'asc') {
-      return aValue < bValue ? -1 : 1;
+    if (typeof sortField === 'string' && sortField.startsWith('user.')) {
+      const field = sortField.split('.')[1];
+      aValue = a.user[field as keyof typeof a.user];
+      bValue = b.user[field as keyof typeof b.user];
     } else {
-      return aValue > bValue ? -1 : 1;
+      aValue = a[sortField as keyof Withdrawal];
+      bValue = b[sortField as keyof Withdrawal];
     }
+
+    if (aValue == null && bValue == null) return 0;
+    if (aValue == null) return 1;
+    if (bValue == null) return -1;
+
+    return sortOrder === 'asc' ? (aValue < bValue ? -1 : 1) : aValue > bValue ? -1 : 1;
   });
 
   const paginatedWithdrawals = useMemo(() => {
