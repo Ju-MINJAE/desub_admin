@@ -1,5 +1,4 @@
 import { Sale, SaleSortField } from '@/types/sales';
-import { SortOrder } from '@/types/subscriber';
 import React, { useMemo, useState } from 'react';
 import SortableHeader from '../common/SortableHeader';
 import Pagination from '../common/Pagination';
@@ -10,7 +9,7 @@ interface SaleTableProps {
 
 export default function SalesTable({ sales }: SaleTableProps) {
   const [sortField, setSortField] = useState<SaleSortField | null>(null);
-  const [sortOrder, setSortOrder] = useState<SortOrder>('asc');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // 한 페이지에 나올 아이템 수
 
@@ -31,14 +30,22 @@ export default function SalesTable({ sales }: SaleTableProps) {
   const sortedSales = [...sales].sort((a, b) => {
     if (!sortField) return 0;
 
-    const aValue = a[sortField];
-    const bValue = b[sortField];
+    let aValue, bValue;
 
-    if (sortOrder === 'asc') {
-      return aValue < bValue ? -1 : 1;
+    if (typeof sortField === 'string' && sortField.startsWith('user.')) {
+      const field = sortField.split('.')[1];
+      aValue = a.user[field as keyof typeof a.user];
+      bValue = b.user[field as keyof typeof b.user];
     } else {
-      return aValue > bValue ? -1 : 1;
+      aValue = a[sortField as keyof Sale];
+      bValue = b[sortField as keyof Sale];
     }
+
+    if (aValue == null && bValue == null) return 0;
+    if (aValue == null) return 1;
+    if (bValue == null) return -1;
+
+    return sortOrder === 'asc' ? (aValue < bValue ? -1 : 1) : aValue > bValue ? -1 : 1;
   });
 
   const paginatedSales = useMemo(() => {

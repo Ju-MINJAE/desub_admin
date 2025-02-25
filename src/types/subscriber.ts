@@ -26,4 +26,3 @@ export type SortField =
   | 'first_payment_date'
   | 'last_payment_date'
   | 'expiry_date';
-export type SortOrder = 'asc' | 'desc';

@@ -29,20 +29,26 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
     }
   };
 
-  const sortedCancellations = useMemo(() => {
-    if (!sortField) return cancellations;
+  const sortedCancellations = [...cancellations].sort((a, b) => {
+    if (!sortField) return 0;
 
-    return [...cancellations].sort((a, b) => {
-      const aValue = a[sortField];
-      const bValue = b[sortField];
+    let aValue, bValue;
 
-      if (sortOrder === 'asc') {
-        return aValue < bValue ? -1 : 1;
-      } else {
-        return aValue > bValue ? -1 : 1;
-      }
-    });
-  }, [cancellations, sortField, sortOrder]);
+    if (typeof sortField === 'string' && sortField.startsWith('user.')) {
+      const field = sortField.split('.')[1];
+      aValue = a.user[field as keyof typeof a.user];
+      bValue = b.user[field as keyof typeof b.user];
+    } else {
+      aValue = a[sortField as keyof Cancellation];
+      bValue = b[sortField as keyof Cancellation];
+    }
+
+    if (aValue == null && bValue == null) return 0;
+    if (aValue == null) return 1;
+    if (bValue == null) return -1;
+
+    return sortOrder === 'asc' ? (aValue < bValue ? -1 : 1) : aValue > bValue ? -1 : 1;
+  });
 
   const paginatedCancellations = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;

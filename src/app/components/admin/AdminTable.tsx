@@ -40,14 +40,22 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
   const sortedAdmins = [...admins].sort((a, b) => {
     if (!sortField) return 0;
 
-    const aValue = a[sortField];
-    const bValue = b[sortField];
+    let aValue, bValue;
 
-    if (sortOrder === 'asc') {
-      return aValue < bValue ? -1 : 1;
+    if (typeof sortField === 'string' && sortField.startsWith('user.')) {
+      const field = sortField.split('.')[1];
+      aValue = a.user[field as keyof typeof a.user];
+      bValue = b.user[field as keyof typeof b.user];
     } else {
-      return aValue > bValue ? -1 : 1;
+      aValue = a[sortField as keyof Admin];
+      bValue = b[sortField as keyof Admin];
     }
+
+    if (aValue == null && bValue == null) return 0;
+    if (aValue == null) return 1;
+    if (bValue == null) return -1;
+
+    return sortOrder === 'asc' ? (aValue < bValue ? -1 : 1) : aValue > bValue ? -1 : 1;
   });
 
   const paginatedAdmins = useMemo(() => {
