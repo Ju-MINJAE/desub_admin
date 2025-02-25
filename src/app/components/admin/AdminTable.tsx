@@ -33,11 +33,6 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
     }
   };
 
-  const handlePasswordChange = (newPassword: string) => {
-    // API 연동 후 비밀번호 변경 처리필요
-    console.log('Password changed:', newPassword);
-  };
-
   const sortedAdmins = [...admins].sort((a, b) => {
     if (!sortField) return 0;
 
@@ -156,7 +151,7 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
             setSelectedAdmin(null);
           }}
           email={selectedAdmin.user.email}
-          onSubmit={handlePasswordChange}
+          id={selectedAdmin.id}
         />
       )}
     </div>

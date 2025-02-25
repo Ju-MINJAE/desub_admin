@@ -9,14 +9,14 @@ interface PasswordChangeModalProps {
   isOpen: boolean;
   onClose: () => void;
   email: string;
-  onSubmit: (newPassword: string) => void;
+  id: string;
 }
 
 export default function PasswordChangeModal({
   isOpen,
   onClose,
   email,
-  onSubmit,
+  id,
 }: PasswordChangeModalProps) {
   const [newPassword, setNewPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -37,14 +37,17 @@ export default function PasswordChangeModal({
           authorization: `Bearer ${accessToken}`,
           accept: 'application/json',
         },
-        body: JSON.stringify({ newPassword }),
+        body: JSON.stringify({
+          user_id: id,
+          new_password: newPassword,
+        }),
       });
 
       if (!response.ok) {
         throw new Error('비밀번호 변경에 실패했습니다');
       }
 
-      onSubmit(newPassword);
+      alert('비밀번호가 성공적으로 변경되었습니다');
       onClose();
     } catch (err) {
       if (err instanceof z.ZodError) {
