@@ -34,7 +34,7 @@ export interface Withdrawal {
   id: string;
   deleted_at: string;
   reason: string;
-  is_active: boolean;
+  is_deletion_confirmed: boolean;
   user: {
     name: string;
     email: string;
@@ -47,4 +47,4 @@ export type WithdrawalSortField =
   | 'user.name'
   | 'user.email'
   | 'user.phone'
-  | 'is_active';
+  | 'is_deletion_confirmed';

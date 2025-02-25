@@ -123,12 +123,13 @@ export default function WithdrawalList() {
     try {
       const { accessToken } = await getAccessToken();
 
-      const response = await fetch(`${BASEURL}/api/admin/admin/?id=${selectedWithdrawal.id}`, {
-        method: 'DELETE',
+      const response = await fetch(`${BASEURL}/api/admin/user-delete/`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${accessToken}`,
         },
+        body: JSON.stringify({ user_id: selectedWithdrawal.id }),
       });
 
       if (!response.ok) {

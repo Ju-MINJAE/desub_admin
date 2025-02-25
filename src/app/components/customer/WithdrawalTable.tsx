@@ -19,7 +19,7 @@ export default function WithdrawalTable({
   const [sortField, setSortField] = useState<WithdrawalSortField | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5; // 한 페이지에 나올 아이템 수
+  const itemsPerPage = 10; // 한 페이지에 나올 아이템 수
 
   const handleSort = (field: WithdrawalSortField) => {
     if (sortField === field) {
@@ -68,7 +68,7 @@ export default function WithdrawalTable({
     { field: 'user.email', label: '이메일주소(아이디)', type: 'sortable' },
     { field: 'user.phone', label: '전화번호', type: 'sortable' },
     { field: undefined, label: '탈퇴사유', type: 'static' },
-    { field: 'is_active', label: '탈퇴처리', type: 'sortable' },
+    { field: 'is_deletion_confirmed', label: '탈퇴처리', type: 'sortable' },
   ];
 
   return (
@@ -109,7 +109,7 @@ export default function WithdrawalTable({
                 </button>
               </td>
               <td className="py-2 text-center">
-                {withdrawal.is_active ? (
+                {withdrawal.is_deletion_confirmed ? (
                   <span className="py-2 text-[1.5rem]">탈퇴완료</span>
                 ) : (
                   <button
