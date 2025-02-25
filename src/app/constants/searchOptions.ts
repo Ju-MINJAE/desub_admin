@@ -126,7 +126,7 @@ export const withdrawalSearchOptions: SearchOption<Withdrawal>[] = [
 
 export const adminSearchOptions: SearchOption<Admin>[] = [
   {
-    value: 'role',
+    value: 'classification',
     label: '분류',
     inputType: 'select',
     options: [
@@ -134,8 +134,8 @@ export const adminSearchOptions: SearchOption<Admin>[] = [
       { value: 'Admin', label: 'Admin' },
     ],
   },
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
-  { value: 'createdAt', label: '계정 생성일', inputType: 'date' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
+  { value: 'created_at', label: '계정 생성일', inputType: 'date' },
 ];

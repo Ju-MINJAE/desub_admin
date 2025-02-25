@@ -1,4 +1,4 @@
-import { Admin } from '@/types/admin';
+import { Admin, AdminSortField } from '@/types/admin';
 import { useMemo, useState } from 'react';
 import SortableHeader from '../common/SortableHeader';
 import { HeaderItem } from '@/types/tableHeader';
@@ -11,14 +11,14 @@ interface AdminListProps {
 }
 
 export default function AdminTable({ admins, onDelete }: AdminListProps) {
-  const [sortField, setSortField] = useState<keyof Admin | null>(null);
+  const [sortField, setSortField] = useState<AdminSortField | null>(null);
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
   const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10; // 한 페이지에 나올 아이템 수
 
-  const handleSort = (field: keyof Admin) => {
+  const handleSort = (field: AdminSortField) => {
     if (sortField === field) {
       if (sortOrder === 'asc') {
         setSortOrder('desc');
@@ -56,12 +56,12 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
     return sortedAdmins.slice(startIndex, endIndex);
   }, [sortedAdmins, currentPage]);
 
-  const COMBINED_HEADERS: HeaderItem<keyof Admin>[] = [
-    { field: 'role', label: '분류', type: 'sortable' },
-    { field: 'email', label: '이메일주소(아이디)', type: 'sortable' },
-    { field: 'name', label: '이름', type: 'sortable' },
-    { field: 'phone', label: '전화번호', type: 'sortable' },
-    { field: 'createdAt', label: '계정 생성일', type: 'sortable' },
+  const COMBINED_HEADERS: HeaderItem<AdminSortField>[] = [
+    { field: 'classification', label: '분류', type: 'sortable' },
+    { field: 'user.email', label: '이메일주소(아이디)', type: 'sortable' },
+    { field: 'user.name', label: '이름', type: 'sortable' },
+    { field: 'user.phone', label: '전화번호', type: 'sortable' },
+    { field: 'created_at', label: '계정 생성일', type: 'sortable' },
     { field: undefined, label: '비밀번호 변경', type: 'static' },
     { field: undefined, label: '계정 삭제', type: 'static' },
   ];
@@ -73,7 +73,7 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
           <tr className="border-y bg-[#F3F3F3]">
             {COMBINED_HEADERS.map((header, index) =>
               header.type === 'sortable' && header.field ? (
-                <SortableHeader<keyof Admin>
+                <SortableHeader<AdminSortField>
                   key={header.field}
                   field={header.field}
                   label={header.label}
@@ -92,11 +92,11 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
         <tbody>
           {paginatedAdmins.map((admin, index) => (
             <tr key={index} className="border-b">
-              <td className="py-4 text-[1.5rem] text-center">{admin.role}</td>
-              <td className="py-4 text-[1.5rem] text-center">{admin.email}</td>
-              <td className="py-4 text-[1.5rem] text-center">{admin.name}</td>
-              <td className="py-4 text-[1.5rem] text-center">{admin.phone}</td>
-              <td className="py-4 text-[1.5rem] text-center">{admin.createdAt}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.classification}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.user.email}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.user.name}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.user.phone}</td>
+              <td className="py-4 text-[1.5rem] text-center">{admin.created_at}</td>
               <td className="py-4 text-[1.5rem] text-center">
                 {admin.passwordChangedAt === '변경' ? (
                   <button
@@ -144,7 +144,7 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
             setIsPasswordModalOpen(false);
             setSelectedAdmin(null);
           }}
-          email={selectedAdmin.email}
+          email={selectedAdmin.user.email}
           onSubmit={handlePasswordChange}
         />
       )}
