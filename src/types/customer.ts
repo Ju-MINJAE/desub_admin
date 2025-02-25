@@ -31,17 +31,20 @@ export type CustomerSortField =
 export type TabType = 'customerList' | 'withdrawalList';
 
 export interface Withdrawal {
-  withdrawalDate: string;
-  name: string;
-  email: string;
-  phone: string;
-  withdrawalReason?: string;
-  withdrawalStatus: boolean;
+  id: string;
+  deleted_at: string;
+  reason: string;
+  is_active: boolean;
+  user: {
+    name: string;
+    email: string;
+    phone: string;
+  };
 }
 
 export type WithdrawalSortField =
-  | 'withdrawalDate'
-  | 'name'
-  | 'email'
-  | 'phone'
-  | 'withdrawalStatus';
+  | 'deleted_at'
+  | 'user.name'
+  | 'user.email'
+  | 'user.phone'
+  | 'is_active';

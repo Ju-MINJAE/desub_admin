@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Search from '../common/Search';
 import type { Withdrawal } from '@/types/customer';
 import { withdrawalSearchOptions } from '@/app/constants/searchOptions';
@@ -8,55 +8,46 @@ import WithdrawalTable from './WithdrawalTable';
 import WithdrawalConfirmModal from './WithdrawalConfirmModal';
 import WithdrawalReasonModal from './WithdrawalReasonModal';
 import ExportExcelButton from '../common/ExportExcelButton';
+import { getAccessToken } from '@/actions/auth/getAccessToken';
+const BASEURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
 export default function WithdrawalList() {
-  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([
-    {
-      withdrawalDate: '2025-01-13',
-      name: '홍길동1',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5678',
-      withdrawalStatus: false,
-    },
-    {
-      withdrawalDate: '2025-01-13',
-      name: '홍길동2',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5679',
-      withdrawalStatus: false,
-    },
-    {
-      withdrawalDate: '2025-01-13',
-      name: '홍길동3',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5670',
-      withdrawalStatus: true,
-    },
-    {
-      withdrawalDate: '2025-01-13',
-      name: '홍길동3',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5670',
-      withdrawalStatus: true,
-    },
-    {
-      withdrawalDate: '2025-01-13',
-      name: '홍길동3',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5670',
-      withdrawalStatus: true,
-    },
-    {
-      withdrawalDate: '2025-01-13',
-      name: '홍길동3',
-      email: 'gildong.hong@gmail.com',
-      phone: '010-1234-5670',
-      withdrawalStatus: true,
-    },
-  ]);
+  const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
+
+  const fetchSubscribers = async () => {
+    try {
+      const { accessToken } = await getAccessToken();
+
+      if (!accessToken) {
+        throw new Error('인증이 필요합니다');
+      }
+
+      const response = await fetch(`${BASEURL}/api/admin/user-delete/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('상품 목록을 불러오는데 실패했습니다');
+      }
+
+      const data = await response.json();
+      setWithdrawals(data);
+      console.log(data);
+    } catch (error) {
+      console.error('Failed to fetch products:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscribers();
+  }, []);
 
   const [searchFilter, setSearchFilter] = useState<{
-    field: keyof Withdrawal;
+    field: keyof Withdrawal | `user.${string}`;
     value: string | { start: string | undefined; end: string | undefined };
   }>({
     field: '' as keyof Withdrawal,
@@ -70,7 +61,7 @@ export default function WithdrawalList() {
 
   const handleSearch = useCallback(
     (
-      field: keyof Withdrawal,
+      field: keyof Withdrawal | `user.${string}`,
       value: string | { start: string | undefined; end: string | undefined },
     ) => {
       setSearchFilter({ field, value });
@@ -78,30 +69,41 @@ export default function WithdrawalList() {
     [],
   );
 
-  const filteredWithdrawal = useMemo(() => {
-    if (!searchFilter.value) return withdrawals;
+  const filteredWithdrawals = useMemo(() => {
+    let filtered = withdrawals;
 
-    return withdrawals.filter(withdrawal => {
-      const fieldValue = withdrawal[searchFilter.field];
+    if (searchFilter.value) {
+      filtered = filtered.filter(withdrawal => {
+        let fieldValue;
 
-      if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
-        if (!searchFilter.value.start && !searchFilter.value.end) {
-          return true;
+        if (searchFilter.field.startsWith('user.')) {
+          const [_, field] = searchFilter.field.split('.');
+          fieldValue = withdrawal.user[field as keyof typeof withdrawal.user];
+        } else {
+          fieldValue = withdrawal[searchFilter.field as keyof Withdrawal];
         }
-        const withdrawalDate = new Date(fieldValue as string);
-        const startDate = searchFilter.value.start
-          ? new Date(searchFilter.value.start)
-          : new Date(0);
-        const endDate = searchFilter.value.end
-          ? new Date(searchFilter.value.end)
-          : new Date(8640000000000000);
-        return withdrawalDate >= startDate && withdrawalDate <= endDate;
-      } else if (typeof fieldValue === 'string' && typeof searchFilter.value === 'string') {
-        return fieldValue.toLowerCase().includes(searchFilter.value.toLowerCase());
-      }
 
-      return false;
-    });
+        if (typeof searchFilter.value === 'object' && 'start' in searchFilter.value) {
+          if (!searchFilter.value.start && !searchFilter.value.end) {
+            return true;
+          }
+          const saleDate = new Date(fieldValue as string);
+          const startDate = searchFilter.value.start
+            ? new Date(searchFilter.value.start)
+            : new Date(0);
+          const endDate = searchFilter.value.end
+            ? new Date(searchFilter.value.end)
+            : new Date(8640000000000000);
+          return saleDate >= startDate && saleDate <= endDate;
+        } else if (typeof fieldValue === 'string' && typeof searchFilter.value === 'string') {
+          return fieldValue.toLowerCase().includes(searchFilter.value.toLowerCase());
+        }
+
+        return false;
+      });
+    }
+
+    return filtered;
   }, [withdrawals, searchFilter]);
 
   const handleWithdrawClick = (withdrawal: Withdrawal) => {
@@ -118,7 +120,9 @@ export default function WithdrawalList() {
     if (!selectedWithdrawal) return;
 
     setWithdrawals(prev =>
-      prev.map(w => (w.name === selectedWithdrawal.name ? { ...w, withdrawalStatus: true } : w)),
+      prev.map(w =>
+        w.user.name === selectedWithdrawal.user.name ? { ...w, withdrawalStatus: true } : w,
+      ),
     );
     alert('탈퇴 처리가 완료되었습니다.');
     setIsConfirmModalOpen(false);
@@ -132,20 +136,20 @@ export default function WithdrawalList() {
           data={withdrawals}
           fileName="탈퇴회원_목록"
           headers={{
-            withdrawalDate: '탈퇴신청일',
-            name: '이름',
-            email: '이메일주소(아이디)',
-            phone: '전화번호',
+            deleted_at: '탈퇴신청일',
+            'user.name': '이름',
+            'user.email': '이메일주소(아이디)',
+            'user.phone': '전화번호',
           }}
         />
         <Search<Withdrawal> onSearch={handleSearch} searchOptions={withdrawalSearchOptions} />
       </div>
       <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-        검색 결과 : {filteredWithdrawal.length}
+        검색 결과 : {filteredWithdrawals.length}
       </p>
 
       <WithdrawalTable
-        withdrawals={filteredWithdrawal}
+        withdrawals={filteredWithdrawals}
         onWithdraw={handleWithdrawClick}
         onDetail={handleDetailClick}
       />
@@ -157,7 +161,7 @@ export default function WithdrawalList() {
             setSelectedWithdrawal(null);
           }}
           onConfirm={handleConfirmWithdraw}
-          customerName={selectedWithdrawal.name}
+          customerName={selectedWithdrawal.user.name}
         />
       )}
       {selectedDetailWithdrawal && (

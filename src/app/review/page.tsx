@@ -88,6 +88,7 @@ const ReviewPage = () => {
 
     return filtered;
   }, [reviews, searchFilter]);
+
   return (
     <div className="pl-[28.5rem]">
       <div className="p-[3.1rem]">

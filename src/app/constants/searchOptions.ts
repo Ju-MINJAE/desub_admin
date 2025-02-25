@@ -27,7 +27,7 @@ export const cancellationSearchOptions: SearchOption<Cancellation>[] = [
         label: '정직원을 구하는 것이 더 편해서',
       },
       { value: '회사 예산이 줄어들어서', label: '회사 예산이 줄어들어서' },
-      { value: '기타', label: '기타' },
+      { value: 'other', label: '기타' },
     ],
   },
 ];
@@ -41,8 +41,8 @@ export const subscriberSearchOptions: SearchOption<Subscriber>[] = [
     label: '구독현황',
     inputType: 'select',
     options: [
-      { value: '진행중', label: '진행중' },
-      { value: '일시정지', label: '일시정지' },
+      { value: 'active', label: '진행중' },
+      { value: 'paused', label: '일시정지' },
     ],
   },
   { value: 'first_payment_date', label: '최초결제일', inputType: 'date' },
@@ -118,10 +118,10 @@ export const saleSearchOptions: SearchOption<Sale>[] = [
 ];
 
 export const withdrawalSearchOptions: SearchOption<Withdrawal>[] = [
-  { value: 'withdrawalDate', label: '탈퇴신청일', inputType: 'date' },
-  { value: 'name', label: '이름', inputType: 'text' },
-  { value: 'email', label: '이메일', inputType: 'text' },
-  { value: 'phone', label: '전화번호', inputType: 'text' },
+  { value: 'deleted_at', label: '탈퇴신청일', inputType: 'date' },
+  { value: 'user.name', label: '이름', inputType: 'text' },
+  { value: 'user.email', label: '이메일', inputType: 'text' },
+  { value: 'user.phone', label: '전화번호', inputType: 'text' },
 ];
 
 export const adminSearchOptions: SearchOption<Admin>[] = [
