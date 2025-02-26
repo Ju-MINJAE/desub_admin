@@ -43,7 +43,7 @@ export default function SubscriptionStatus() {
       const data = await response.json();
       setSubscribers(data.requests);
       setDashBoard(data.dashboard);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error('Failed to fetch products:', error);
       setError('상품 목록을 불러오는데 실패했습니다');
@@ -181,7 +181,7 @@ export default function SubscriptionStatus() {
           </label>
         </div>
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredSubscribers.length}
+          검색 결과 : {filteredSubscribers?.length ?? 0}
         </p>
 
         <SubscriptionTable subscribers={filteredSubscribers} />

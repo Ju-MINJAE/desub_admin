@@ -95,7 +95,24 @@ export default function CancellationTable({ cancellations, onRefund }: Cancellat
               <td className="py-2 text-[1.5rem] text-center">{cancellation.user.email}</td>
               <td className="py-2 text-[1.5rem] text-center">{cancellation.user.phone}</td>
               <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelled_date}</td>
-              <td className="py-2 text-[1.5rem] text-center">{cancellation.cancelled_reason}</td>
+              <td className="py-2 text-[1.5rem] text-center">
+                {(() => {
+                  switch (cancellation.cancelled_reason) {
+                    case 'expensive':
+                      return '가격이 비싸서';
+                    case 'quality':
+                      return '퀄리티가 마음에 들지 않아서';
+                    case 'slow_communication':
+                      return '소통이 느려서';
+                    case 'hire_full_time':
+                      return '정식원을 구하는 것이 더 편해서';
+                    case 'buget_cut':
+                      return '회사 예산이 줄어들어서';
+                    default:
+                      return cancellation.cancelled_reason;
+                  }
+                })()}
+              </td>
               <td className="py-2 text-[1.5rem] text-center">
                 {cancellation.refund_status === 'refund_pending' ? (
                   <button

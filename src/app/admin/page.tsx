@@ -14,6 +14,7 @@ export default function AdminManagement() {
   const [admins, setAdmins] = useState<Admin[]>([]);
   const [isFormView, setIsFormView] = useState(false);
 
+  // admin list api 호출
   const fetchAdmins = async () => {
     try {
       const { accessToken } = await getAccessToken();
@@ -35,8 +36,8 @@ export default function AdminManagement() {
       }
 
       const data = await response.json();
-      setAdmins(data.user);
-      console.log(data);
+      setAdmins(data);
+      // console.log(data);
     } catch (error) {
       console.error('Failed to fetch products:', error);
     }
@@ -71,15 +72,37 @@ export default function AdminManagement() {
     setIsDeleteModalOpen(true);
   };
 
-  const handleConfirmDelete = () => {
+  // amdin 삭제 api 호출
+  const handleConfirmDelete = async () => {
     if (!selectedAdmin) return;
 
-    setAdmins(prev =>
-      prev.map(a => (a.user.email === selectedAdmin.user.email ? { ...a, status: false } : a)),
-    );
-    alert('삭제 처리가 완료되었습니다.');
-    setIsDeleteModalOpen(false);
-    setSelectedAdmin(null);
+    try {
+      const { accessToken } = await getAccessToken();
+
+      const response = await fetch(`${BASEURL}/api/admin/admin/?id=${selectedAdmin.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('Delete error:', errorText);
+        throw new Error('계정 삭제에 실패했습니다');
+      }
+
+      setAdmins(prev => prev.map(a => (a.id === selectedAdmin.id ? { ...a, status: false } : a)));
+
+      alert('삭제 처리가 완료되었습니다.');
+      setIsDeleteModalOpen(false);
+      setSelectedAdmin(null);
+      fetchAdmins();
+    } catch (error) {
+      console.error('Failed to delete admin:', error);
+      alert('계정 삭제에 실패했습니다. 다시 시도해주세요.');
+    }
   };
 
   const filteredAdmins = useMemo(() => {
@@ -141,7 +164,7 @@ export default function AdminManagement() {
         </div>
 
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredAdmins.length}
+          검색 결과 : {filteredAdmins?.length ?? 0}
         </p>
 
         <AdminTable admins={filteredAdmins} onDelete={handleDeleteClick} />

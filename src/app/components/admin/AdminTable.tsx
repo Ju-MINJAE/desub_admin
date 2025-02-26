@@ -4,6 +4,7 @@ import SortableHeader from '../common/SortableHeader';
 import { HeaderItem } from '@/types/tableHeader';
 import PasswordChangeModal from './PasswordChangeModal';
 import Pagination from '../common/Pagination';
+import { format, parseISO } from 'date-fns';
 
 interface AdminListProps {
   admins: Admin[];
@@ -30,11 +31,6 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
       setSortField(field);
       setSortOrder('asc');
     }
-  };
-
-  const handlePasswordChange = (newPassword: string) => {
-    // API 연동 후 비밀번호 변경 처리필요
-    console.log('Password changed:', newPassword);
   };
 
   const sortedAdmins = [...admins].sort((a, b) => {
@@ -104,9 +100,11 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
               <td className="py-4 text-[1.5rem] text-center">{admin.user.email}</td>
               <td className="py-4 text-[1.5rem] text-center">{admin.user.name}</td>
               <td className="py-4 text-[1.5rem] text-center">{admin.user.phone}</td>
-              <td className="py-4 text-[1.5rem] text-center">{admin.created_at}</td>
               <td className="py-4 text-[1.5rem] text-center">
-                {admin.passwordChangedAt === '변경' ? (
+                {format(parseISO(admin.created_at), 'yyyy-MM-dd')}
+              </td>
+              <td className="py-4 text-[1.5rem] text-center">
+                {admin.classification === 'Admin' ? (
                   <button
                     className="underline"
                     onClick={() => {
@@ -117,11 +115,11 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
                     변경
                   </button>
                 ) : (
-                  admin.passwordChangedAt
+                  <span>-</span>
                 )}
               </td>
               <td className="py-2 text-[1.5rem] text-center">
-                {admin.status === true ? (
+                {admin.classification === 'Admin' ? (
                   <button
                     onClick={() => onDelete?.(admin)}
                     className="w-[7rem] px-4 py-2 text-[1.5rem] border border-black rounded-[1.2rem]"
@@ -153,7 +151,7 @@ export default function AdminTable({ admins, onDelete }: AdminListProps) {
             setSelectedAdmin(null);
           }}
           email={selectedAdmin.user.email}
-          onSubmit={handlePasswordChange}
+          id={selectedAdmin.id}
         />
       )}
     </div>

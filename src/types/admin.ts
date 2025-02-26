@@ -2,8 +2,6 @@ export interface Admin {
   classification: string;
   created_at: string;
   id: string;
-  passwordChangedAt: string;
-  status: boolean | '-';
   user: {
     email: string;
     name: string;

@@ -123,7 +123,7 @@ export default function SubscriptionCancel() {
         </Heading>
         <div className="mt-[1.8rem]">
           <p className="text-[1.8rem]">
-            전체 취소 수 : {dashboard.sub_cancel_all}명 | 오늘 신규 취소 :
+            전체 취소 수 : {dashboard.sub_cancel_all}명 | 오늘 신규 취소 :{' '}
             {dashboard.sub_cancel_today}명
           </p>
         </div>
@@ -145,7 +145,7 @@ export default function SubscriptionCancel() {
         </div>
 
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredCancellations.length}
+          검색 결과 : {filteredCancellations?.length ?? 0}
         </p>
 
         <CancellationTable cancellations={filteredCancellations} onRefund={handleRefundClick} />
