@@ -43,7 +43,7 @@ export default function WithdrawalList() {
 
       const data = await response.json();
       setWithdrawals(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error('Failed to fetch products:', error);
     }

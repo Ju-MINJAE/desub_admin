@@ -88,7 +88,6 @@ export default function ProductManagement() {
   const handleDeleteConfirm = async (product: Product) => {
     try {
       const { accessToken } = await getAccessToken();
-      console.log('Deleting product:', product.id);
 
       const response = await fetch(`${BASEURL}/api/plans/${product.id}/delete/`, {
         method: 'DELETE',

@@ -37,7 +37,7 @@ export default function AdminManagement() {
 
       const data = await response.json();
       setAdmins(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error('Failed to fetch products:', error);
     }

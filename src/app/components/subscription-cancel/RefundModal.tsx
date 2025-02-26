@@ -31,7 +31,7 @@ export default function RefundModal({ isOpen, onClose, subsId }: RefundModalProp
 
       const data = await response.json();
       setRefundInfo(data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error('Failed to fetch refund info:', error);
     }

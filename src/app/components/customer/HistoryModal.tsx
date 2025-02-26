@@ -40,7 +40,7 @@ export default function HistoryModal({ isOpen, onClose, customerId }: HistoryMod
 
       const data = await response.json();
       setHistory(data.history);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       console.error('Failed to fetch customer history:', error);
     } finally {
