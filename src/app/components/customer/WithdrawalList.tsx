@@ -209,7 +209,7 @@ export default function WithdrawalList() {
         <Search<Withdrawal> onSearch={handleSearch} searchOptions={withdrawalSearchOptions} />
       </div>
       <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-        검색 결과 : {filteredWithdrawals.length}
+        검색 결과 : {filteredWithdrawals?.length ?? 0}
       </p>
 
       <WithdrawalTable

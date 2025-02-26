@@ -144,7 +144,7 @@ export default function CustomerList() {
       </div>
 
       <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-        검색 결과 : {filteredCustomers.length}
+        검색 결과 : {filteredCustomers?.length ?? 0}
       </p>
 
       <CustomerTable customers={filteredCustomers} onHistoryClick={handleHistoryClick} />

@@ -72,6 +72,7 @@ export default function AdminManagement() {
     setIsDeleteModalOpen(true);
   };
 
+  // amdin 삭제 api 호출
   const handleConfirmDelete = async () => {
     if (!selectedAdmin) return;
 
@@ -163,7 +164,7 @@ export default function AdminManagement() {
         </div>
 
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredAdmins.length}
+          검색 결과 : {filteredAdmins?.length ?? 0}
         </p>
 
         <AdminTable admins={filteredAdmins} onDelete={handleDeleteClick} />

@@ -145,7 +145,7 @@ export default function SubscriptionCancel() {
         </div>
 
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredCancellations.length}
+          검색 결과 : {filteredCancellations?.length ?? 0}
         </p>
 
         <CancellationTable cancellations={filteredCancellations} onRefund={handleRefundClick} />

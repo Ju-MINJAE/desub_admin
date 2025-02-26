@@ -181,7 +181,7 @@ export default function SubscriptionStatus() {
           </label>
         </div>
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredSubscribers.length}
+          검색 결과 : {filteredSubscribers?.length ?? 0}
         </p>
 
         <SubscriptionTable subscribers={filteredSubscribers} />

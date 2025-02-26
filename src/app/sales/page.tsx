@@ -139,7 +139,7 @@ export default function Sales() {
         </div>
 
         <p className="my-[1.5rem] text-[1.3rem] text-[#4D4D4D]">
-          검색 결과 : {filteredSales.length}
+          검색 결과 : {filteredSales?.length ?? 0}
         </p>
         <SalesTable sales={filteredSales} />
       </div>
